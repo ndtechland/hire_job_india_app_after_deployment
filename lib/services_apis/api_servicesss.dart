@@ -1731,6 +1731,79 @@ class ApiProvider {
     return httpResponse;
   }
 
+  ///todo: update profile picture....employee....
+
+  static String apiUrl9 = "${baseUrl}EmployeeApi/EmpUpdateprofilepicture";
+  //https://api.hirejobindia.com/api/EmployeeApi/EmpUpdateprofilepicture
+  static Future<http.Response> updateProfileEmployeeApi(
+    Uint8List cvFileContent3,
+    String Empprofile,
+  ) async {
+    var uri = Uri.parse(apiUrl9);
+    var request = http.MultipartRequest('POST', uri);
+
+    // Helper function to determine the MediaType based on the file extension
+    MediaType getMediaType(String filename) {
+      String ext = filename.split('.').last.toLowerCase();
+      switch (ext) {
+        case 'jpg':
+        case 'jpeg':
+          return MediaType('image', 'jpeg');
+        case 'png':
+          return MediaType('image', 'png');
+        default:
+          throw Exception('Unsupported file type');
+      }
+    }
+
+    // Add file field
+    request.files.add(http.MultipartFile.fromBytes(
+      'Empprofile', // The name of the file field
+      cvFileContent3,
+      filename: Empprofile,
+      contentType: getMediaType(Empprofile),
+    ));
+
+    // Get token from GetStorage
+    final storage = GetStorage();
+    var token = storage.read('token');
+
+    // Set token in headers
+    request.headers['Authorization'] = 'Bearer $token';
+
+    // Send the request
+    var response = await request.send();
+
+    // Parse the response
+    var httpResponse = await http.Response.fromStream(response);
+
+    // Print the response data
+    print('Response status: ${httpResponse.statusCode}');
+    print('Response body: ${httpResponse.body}');
+
+    // Show toast based on response
+    if (httpResponse.statusCode == 200) {
+      Fluttertoast.showToast(
+        msg: "Profile updated successfully!",
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg:
+            "Failed to update profile. Status code: ${httpResponse.statusCode}",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+    }
+
+    return httpResponse;
+  }
+
   ///change password api,,,,for employee.......
   static Future<http.Response?> ChangePasswordEmployeeApi(
       BuildContext context, // Added context parameter

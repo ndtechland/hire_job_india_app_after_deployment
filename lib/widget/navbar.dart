@@ -9,6 +9,7 @@ import 'package:hirejobindia/modules/all_pages/pages/company.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/responsive_text.dart';
+import '../controllers/company_detail_by_com_id/company_detail_by_id_controller.dart';
 import '../controllers/employeee_controllersss/support_comman/support_commannn.dart';
 import '../controllers/home_page_controllerss/home_page_controllerss.dart';
 import '../controllers/login_controllers/login_controllersss.dart';
@@ -34,11 +35,14 @@ class NavBar extends StatelessWidget {
 
   SupportEmployeeController _supportEmployeeController =
       Get.put(SupportEmployeeController());
+  CompanyDetailController _companyDetailController = Get.find();
 
   final snackBarDuration = Duration(seconds: 3); // Define your desired duration
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return SafeArea(
       child: Drawer(
         child: ListView(
@@ -179,9 +183,14 @@ class NavBar extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.computer),
               title: const Text('Companies'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Company()));
+              onTap: () async {
+                //
+                await _companyDetailController.companydetailbyIdApi();
+                _companyDetailController.update();
+                _companyDetailController.onInit();
+                await Get.to(Company());
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => Company()));
               },
             ),
 
@@ -234,6 +243,53 @@ class NavBar extends StatelessWidget {
                         ));
               },
             ),
+
+            ListTile(
+              leading: Icon(
+                Icons.delete_forever_outlined,
+                // color: logoColor,
+                //size: size.height * 0.021,
+              ),
+              // trailing: Icon(
+              //   Icons.arrow_forward_ios_sharp,
+              //   color: Colors.black,
+              //   size: size.height * 0.02,
+              // ),
+              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              dense: true,
+              visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+              // title: Text(
+              //   'Delete Account',
+              //   style: TextStyle(
+              //       fontSize: size.height * 0.016,
+              //       fontWeight: FontWeight.w600,
+              //       color: logoColor),
+              // ),
+              title: const Text('   Delete Account'),
+
+              onTap: () {
+                Get.defaultDialog(
+                  title: "Welcome To  HireJobIndia",
+                  middleText: "You content goes here...",
+                  content: getContent(),
+                  barrierDismissible: true,
+                  radius: 20.0,
+                  confirm: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: confirmBtn(),
+                  ),
+                  cancel: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: cancelBtn(),
+                  ),
+                );
+
+                //Get.to(() => CupponsPage());
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => Wollet()));
+              }, //PersonalDetails
+            ),
+
             // ListTile(
             //   leading: const Icon(Icons.notifications),
             //   title: const Text('Notification'),
@@ -285,6 +341,54 @@ class NavBar extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget confirmBtn() {
+    return ElevatedButton(
+        onPressed: () {
+          Get.back();
+        },
+        style: ElevatedButton.styleFrom(
+            primary: Colors.red,
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            textStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+        child: Text("Confirm"));
+  }
+
+  Widget cancelBtn() {
+    return ElevatedButton(
+        onPressed: () {
+          Get.back();
+        },
+        style: ElevatedButton.styleFrom(
+            primary: Colors.green,
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            textStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+        child: Text("Cancel"));
+  }
+
+  Widget getContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "If Yow want to remove your account,",
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+        ),
+        Text(
+          "Then you please click confirm button",
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+        ),
+        Text(
+          "Your data will erase if you press confirm.",
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+        ),
+        Text(
+          "If you don't want to delete press cancel",
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+        ),
+      ],
     );
   }
 }

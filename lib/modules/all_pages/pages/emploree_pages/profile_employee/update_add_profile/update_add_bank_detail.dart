@@ -20,6 +20,7 @@ class _BankDetailUpdateEmployeeProfileState
     extends State<BankDetailUpdateEmployeeProfile> {
   final ProfileEmployeeController _getprofileebnk =
       Get.put(ProfileEmployeeController());
+
   final BankEmployeeUodateController _bankEmployeeUodateController =
       Get.put(BankEmployeeUodateController());
 
@@ -41,6 +42,31 @@ class _BankDetailUpdateEmployeeProfileState
   final TextEditingController _cvFilePathController = TextEditingController();
 
   Uint8List? _cvFileContent;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_getprofileebnk.getbankprofiledetail != null) {
+      _acholdernameController.text =
+          _getprofileebnk.getbankprofiledetail!.data!.accountHolderName!;
+      _bankController.text =
+          _getprofileebnk.getbankprofiledetail!.data!.bankName!;
+      _accnumberController.text =
+          _getprofileebnk.getbankprofiledetail!.data!.accountNumber!.toString();
+      _reenteracnoNumberController.text = _getprofileebnk
+          .getbankprofiledetail!.data!.reEnterAccountNumber!
+          .toString();
+      _ifscController.text = _getprofileebnk.getbankprofiledetail!.data!.ifsc!;
+      _acounttypeController.text =
+          _getprofileebnk.getbankprofiledetail!.data!.accountTypeId!;
+      _epfnumnberController.text =
+          _getprofileebnk.getbankprofiledetail!.data!.epfNumber!;
+      _nominiNameController.text =
+          _getprofileebnk.getbankprofiledetail!.data!.nominee!;
+      //_pincodeController.text =
+      // _acholdernameController.text = _getprofileebnk.getbankprofiledetail!.data!.accountHolderName!;
+    }
+  }
 
   @override
   void dispose() {
@@ -472,43 +498,31 @@ class _BankDetailUpdateEmployeeProfileState
                                   const SizedBox(height: 24),
                                   MyElevatedButton(
                                     onPressed: () {
-                                      if (_bankEmployeeUodateController
-                                              .bankemployeeFormKey.currentState
-                                              ?.validate() ??
-                                          false) {
-                                        if (_cvFileContent != null) {
-                                          _bankEmployeeUodateController
-                                              .updateBankProfile(
-                                            accountHolderName:
-                                                _acholdernameController.text,
-                                            bankname:
-                                                _acholdernameController.text,
-                                            accountNumber:
-                                                _accnumberController.text,
-                                            reEnterAccountNumber:
-                                                _reenteracnoNumberController
-                                                    .text,
-                                            ifsc: _ifscController.text,
-                                            epfNumber:
-                                                _epfnumnberController.text,
-                                            deductionCycle:
-                                                _deductioncycleController.text,
-                                            employeeContributionRate:
-                                                _employeecontrobutionController
-                                                    .text,
-                                            //_deduc
-                                            nominee: _nominiNameController.text,
-                                            accountTypeId:
-                                                _bankEmployeeUodateController
-                                                    .selectedGender.value,
-                                            cvFileContent: _cvFileContent!,
-                                            Chequebase64:
-                                                _cvFilePathController.text,
-                                          );
-                                        } else {
-                                          print('Please select a check file');
-                                        }
-                                      }
+                                      _bankEmployeeUodateController
+                                          .updateBankProfile(
+                                        accountHolderName:
+                                            _acholdernameController.text,
+                                        bankname: _bankController.text,
+                                        accountNumber:
+                                            _accnumberController.text,
+                                        reEnterAccountNumber:
+                                            _reenteracnoNumberController.text,
+                                        ifsc: _ifscController.text,
+                                        epfNumber: _epfnumnberController.text,
+                                        // deductionCycle:
+                                        //     _deductioncycleController.text,
+                                        // employeeContributionRate:
+                                        //     _employeecontrobutionController
+                                        //         .text,
+                                        //_deduc
+                                        nominee: _nominiNameController.text,
+                                        accountTypeId:
+                                            _bankEmployeeUodateController
+                                                .selectedGender.value,
+                                        cvFileContent: _cvFileContent!,
+                                        Chequebase64:
+                                            _cvFilePathController.text,
+                                      );
                                     },
                                     text: Text('Update'),
                                     height: 40,

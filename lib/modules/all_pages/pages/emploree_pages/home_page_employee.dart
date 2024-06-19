@@ -121,13 +121,15 @@ class HomeEmployee extends StatelessWidget {
                 // Navigate to login screen
                 Get.offAll(() => Login());
                 // Show success snackbar
-                Get.snackbar(
-                  'Success',
-                  'Successfully logged out',
-                  snackPosition: SnackPosition.TOP,
-                  backgroundColor: Colors.green,
-                  duration: snackBarDuration, // Set the duration
-                );
+                // Get.snackbar(
+                //   'Success',
+                //   'Successfully logged out',
+                //   snackPosition: SnackPosition.TOP,
+                //   backgroundColor: Colors.green,
+                //   duration: snackBarDuration, // Set the duration
+                // );
+                ///
+
                 // Start the timer
                 // Timer(Duration(seconds: 2), () async {
                 //   final accountData = await accountService.getAccountData;

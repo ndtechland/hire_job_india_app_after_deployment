@@ -1,35 +1,33 @@
+import 'dart:typed_data';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:hirejobindia/components/styles.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../controllers/user_profile_controller/user_profile_controller.dart';
 import '../../../controllers/user_profile_update_controller/user_profile_update_controller.dart';
 import '../../../models/city_model.dart';
-import '../../../models/profile_model.dart';
 import '../../../models/state_model.dart';
 import '../../../widget/elevated_button.dart';
 
-class EditProfile extends StatelessWidget {
+class EditProfile extends StatefulWidget {
+  const EditProfile({Key? key}) : super(key: key);
+  @override
+  State<EditProfile> createState() => _EditProfileState();
+}
+
+class _EditProfileState extends State<EditProfile> {
+  //final _getprofilee; // Assume this is your profile model instance
+
   final ProfileController _getprofilee = Get.put(ProfileController());
 
   UserProfileUodateController _userProfileUodateController =
       Get.put(UserProfileUodateController());
-
-  // static const String id = 'Profile';
-
-  EditProfile({Key? key}) : super(key: key);
-  GetProfileModel? getprofileModel;
-
-  int selectID = 1;
-  String dropdownValueDay = '2';
-  String dropdownValueMonth = 'July';
-  String dropdownValueYear = '1990';
-  String dropdownValueCountry = 'India';
-  String dropdownValueZip = '110096';
 
   final TextEditingController _nameController = TextEditingController(
       // text: _getprofilee.getprofileModel.response.fullName
@@ -62,6 +60,48 @@ class EditProfile extends StatelessWidget {
 
   Uint8List? _cvFileContent;
   Uint8List? _cvFileContent2;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_getprofilee.getprofileModel != null) {
+      _nameController.text = _getprofilee.getprofileModel!.response!.fullName!;
+      _emailController.text = _getprofilee.getprofileModel!.response!.emailId!;
+      _mobileNumbercontroller.text =
+          _getprofilee.getprofileModel!.response!.mobileNumber.toString();
+      _dateOfBirthController.text = formatDateOfBirth(
+          _getprofilee.getprofileModel!.response!.dateofbirth.toString());
+      _experienceController.text =
+          _getprofilee.getprofileModel!.response!.experience!;
+      _currentctcController.text =
+          _getprofilee.getprofileModel!.response!.currentCtc!.toString();
+      _expactedctcController.text =
+          _getprofilee.getprofileModel!.response!.expectedCtc!.toString();
+      _addressController.text =
+          _getprofilee.getprofileModel!.response!.address!;
+      _pincodeController.text =
+          _getprofilee.getprofileModel!.response!.pincode.toString();
+    }
+  }
+
+  String formatDateOfBirth(String dateOfBirthString) {
+    try {
+      DateFormat inputFormat = DateFormat("dd/MM/yyyy");
+      DateTime dateOfBirth = inputFormat.parse(dateOfBirthString);
+      DateFormat outputFormat = DateFormat("dd-MM-yyyy");
+      return outputFormat.format(dateOfBirth);
+    } catch (e) {
+      try {
+        DateFormat inputFormat = DateFormat("yyyy-MM-dd");
+        DateTime dateOfBirth = inputFormat.parse(dateOfBirthString);
+        DateFormat outputFormat = DateFormat("dd-MM-yyyy");
+        return outputFormat.format(dateOfBirth);
+      } catch (e) {
+        print('Error parsing date: $e');
+        return dateOfBirthString;
+      }
+    }
+  }
 
   Future<void> _checkAndRequestPermissions(context) async {
     if (await Permission.storage.request().isGranted) {
@@ -165,39 +205,36 @@ class EditProfile extends StatelessWidget {
     }
   }
 
+  // static const String id = 'Profile';
+
+  //GetProfileModel? getprofileModel;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    // if (getprofileModel != null) {
-    //   _nameController.text = getprofileModel!.response?.fullName ?? '';
-    // }
-
-    final TextEditingController _nameController = TextEditingController(
-        text: _getprofilee.getprofileModel!.response!.fullName);
-    final TextEditingController _emailController = TextEditingController(
-        text: _getprofilee.getprofileModel!.response!.emailId);
-
-    final TextEditingController _mobileNumbercontroller = TextEditingController(
-        text: _getprofilee.getprofileModel!.response!.mobileNumber.toString());
-
-    final TextEditingController _dateOfBirthController = TextEditingController(
-        text:
-            "${_getprofilee.getprofileModel!.response!.dateofbirth.toString()}");
-
-    final TextEditingController _experienceController = TextEditingController(
-        text: _getprofilee.getprofileModel!.response!.experience);
-    // final TextEditingController _dateOfBirthController =
-    //     TextEditingController();
-    final TextEditingController _currentctcController =
-        TextEditingController(text: "300000");
-    final TextEditingController _expactedctcController =
-        TextEditingController(text: "500000");
-
-    final TextEditingController _addressController = TextEditingController(
-        text: _getprofilee.getprofileModel!.response!.address);
-    final TextEditingController _pincodeController = TextEditingController(
-        text: _getprofilee.getprofileModel!.response!.pincode.toString());
+    ///todo: date formate in datetime......
+    String formatDateOfBirth(String dateOfBirthString) {
+      // Try parsing with the first format
+      try {
+        DateFormat inputFormat = DateFormat("dd/MM/yyyy");
+        DateTime dateOfBirth = inputFormat.parse(dateOfBirthString);
+        DateFormat outputFormat = DateFormat("dd-MM-yyyy");
+        return outputFormat.format(dateOfBirth);
+      } catch (e) {
+        // If the first format fails, try the second format
+        try {
+          DateFormat inputFormat = DateFormat("yyyy-MM-dd");
+          DateTime dateOfBirth = inputFormat.parse(dateOfBirthString);
+          DateFormat outputFormat = DateFormat("dd-MM-yyyy");
+          return outputFormat.format(dateOfBirth);
+        } catch (e) {
+          // If both formats fail, return the original string or handle the error
+          print('Error parsing date: $e');
+          return dateOfBirthString;
+        }
+      }
+    }
 
     ///
     String imageUrl2 =
@@ -219,14 +256,7 @@ class EditProfile extends StatelessWidget {
       body: Obx(
         () => (_getprofilee.isLoading.value)
             ? Center(child: CircularProgressIndicator())
-            :
-
-            // if (_getprofilee.getprofileModel?.response != null) {
-            //   _nameController.text =
-            //       _getprofilee.getprofileModel!.response!.fullName ?? '';
-            //   return
-
-            Form(
+            : Form(
                 key: _userProfileUodateController.userprifileFormKey,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: SingleChildScrollView(
@@ -410,99 +440,6 @@ class EditProfile extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            // Column(
-                            //   crossAxisAlignment: CrossAxisAlignment.start,
-                            //   children: [
-                            //     const SizedBox(height: 20),
-                            //     greyTextSmall('Date of Birth'),
-                            //     Row(
-                            //       children: [
-                            //         Expanded(
-                            //           child: DropdownButton<String>(
-                            //             value: dropdownValueDay,
-                            //             icon: const Icon(Icons.arrow_drop_down),
-                            //             style: const TextStyle(
-                            //                 color: Colors.black87),
-                            //             onChanged: (String? newValue) {
-                            //               // Handle day change
-                            //             },
-                            //             items: List.generate(
-                            //                     31,
-                            //                     (index) =>
-                            //                         (index + 1).toString())
-                            //                 .map<DropdownMenuItem<String>>(
-                            //                     (String value) {
-                            //               return DropdownMenuItem<String>(
-                            //                 value: value,
-                            //                 child: Text(value),
-                            //               );
-                            //             }).toList(),
-                            //           ),
-                            //         ),
-                            //         const SizedBox(width: 10),
-                            //         Expanded(
-                            //           child: DropdownButton<String>(
-                            //             value: dropdownValueMonth,
-                            //             onChanged: (String? newValue) {
-                            //               // Handle month change
-                            //             },
-                            //             items: <String>[
-                            //               'January',
-                            //               'February',
-                            //               'March',
-                            //               'April',
-                            //               'May',
-                            //               'June',
-                            //               'July',
-                            //               'August',
-                            //               'September',
-                            //               'October',
-                            //               'November',
-                            //               'December'
-                            //             ].map<DropdownMenuItem<String>>(
-                            //                 (String value) {
-                            //               return DropdownMenuItem<String>(
-                            //                 value: value,
-                            //                 child: Text(value.toUpperCase(),
-                            //                     style: TextStyle(fontSize: 11)),
-                            //               );
-                            //             }).toList(),
-                            //           ),
-                            //         ),
-                            //         const SizedBox(width: 10),
-                            //         Expanded(
-                            //           child: DropdownButton<String>(
-                            //             value: dropdownValueYear,
-                            //             icon: const Icon(Icons.arrow_drop_down),
-                            //             style: const TextStyle(
-                            //                 color: Colors.black87),
-                            //             onChanged: (String? newValue) {
-                            //               // Handle year change
-                            //             },
-                            //             items: <String>[
-                            //               '1990',
-                            //               '1991',
-                            //               '1992',
-                            //               '1993',
-                            //               '1994',
-                            //               '1995',
-                            //               '1996',
-                            //               '1997'
-                            //             ].map<DropdownMenuItem<String>>(
-                            //                 (String value) {
-                            //               return DropdownMenuItem<String>(
-                            //                 value: value,
-                            //                 child: Text(value),
-                            //               );
-                            //             }).toList(),
-                            //           ),
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ],
-                            // ),
-                            //textFieldNo('Phone Number'),
-                            //textFieldNo('Email Address'),
                             const SizedBox(height: 10),
                           ],
                         ),
@@ -549,11 +486,6 @@ class EditProfile extends StatelessWidget {
                                         size: 23,
                                         color: Colors.black12,
                                       ),
-                                      // suffixIcon: Icon(
-                                      //   Icons.place_outlined,
-                                      //   size: 23,
-                                      //   color: Colors.black12,
-                                      // ),
                                       labelStyle: const TextStyle(
                                           color: Colors.black54, fontSize: 15),
                                       focusedBorder: const UnderlineInputBorder(
@@ -580,8 +512,8 @@ class EditProfile extends StatelessWidget {
                                         ),
                                       );
                                     }).toList(),
-                                    validator: (value) =>
-                                        value == null ? 'Select States' : null,
+                                    // validator: (value) =>
+                                    //     value == null ? 'Select States' : null,
                                     onChanged: (StateModelss? newValue) {
                                       _userProfileUodateController
                                           .selectedState.value = newValue!;
@@ -637,8 +569,8 @@ class EditProfile extends StatelessWidget {
                                     onTap: () {
                                       _userProfileUodateController.refresh();
                                     },
-                                    validator: (value) =>
-                                        value == null ? 'Select City' : null,
+                                    // validator: (value) =>
+                                    //     value == null ? 'Select City' : null,
                                     onChanged: (CityModell? newValue) {
                                       _userProfileUodateController
                                           .selectedCity.value = newValue!;
@@ -1005,6 +937,24 @@ class EditProfile extends StatelessWidget {
 
                       MyElevatedButton(
                         onPressed: () {
+                          // Ensure date is formatted correctly
+                          String formattedDateOfBirth =
+                              formatDateOfBirth(_dateOfBirthController.text);
+
+                          // Use null-aware operators to handle potential null values
+                          String stateId = _userProfileUodateController
+                                  .selectedState.value?.id
+                                  .toString() ??
+                              _getprofilee.getprofileModel?.response?.stateid
+                                  ?.toString() ??
+                              "2";
+                          String cityId = _userProfileUodateController
+                                  .selectedCity.value?.id
+                                  .toString() ??
+                              _getprofilee.getprofileModel?.response?.cityid
+                                  ?.toString() ??
+                              "158";
+
                           // Here you can send `_aadharImages` to your backend API
                           // Make sure to handle the list of Uint8List in your backend
                           // For example:
@@ -1015,19 +965,39 @@ class EditProfile extends StatelessWidget {
                           //     false) {
                           //   _employeeloginController.checkemployeeLogin();
                           // }
+                          ///selectedState.value?.id.toString() ??
+                          ///   _doctorProfileControllers.doctorProfile?.stateMasterId,
+                          ///   _getprofilee
+                          ///
+                          // Retrieve current CV file content and CV file name from the current profile data
+                          // Uint8List? currentCVFileContent = _getprofilee.getprofileModel?.response?.cvFileContent ?? Uint8List(0);
+                          // String currentCVFileName = _getprofilee.getprofileModel?.response?.resumeFilePath ?? '';
+                          //
+                          // Uint8List? currentCVFileContent = _getprofilee
+                          //     .getprofileModel?.response?.cvFileContent;
+                          // String currentCVFileName = _getprofilee
+                          //         .getprofileModel?.response?.resumeFilePath ??
+                          //     '';
+                          // Set the CV file content and CV file name if available
+                          //_cvFileContent = currentCVFileContent;
+                          //_cvFilePathController.text = currentCVFileName;
 
                           _userProfileUodateController.updateUseerrProfile(
                             fullName: _nameController.text,
                             emailID: _emailController.text,
                             mobileNumber: _mobileNumbercontroller.text,
                             experience: _experienceController.text,
-                            stateId: _userProfileUodateController
-                                .selectedState.value!.id
-                                .toString(),
-                            cityId: _userProfileUodateController
-                                .selectedCity.value!.id
-                                .toString(),
-                            dateofbirth: _dateOfBirthController.text,
+                            stateId: stateId,
+                            //_userProfileUodateController.selectedState.value!.id.toString() ? "1",
+                            // ??
+                            // _getprofilee.getprofileModel!.response!.stateid
+                            //     .toString(),
+                            cityId: cityId,
+                            // _userProfileUodateController
+                            //     .selectedCity.value!.id
+                            //     .toString(),
+                            dateofbirth: formattedDateOfBirth,
+                            //_dateOfBirthController.text,
                             address: _addressController.text,
                             pincode: _pincodeController.text,
                             currentCTC: _currentctcController.text,
@@ -1532,29 +1502,29 @@ class EditProfile extends StatelessWidget {
         ));
   }
 
-  Widget _buildSelect(title, id) {
-    return GestureDetector(
-      onTap: () {
-        // setState(() {
-        //   selectID = id;
-        // });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 50),
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black12),
-          color: selectID == id ? appColor : Colors.transparent,
-          borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-        ),
-        child: Text(title,
-            style: TextStyle(
-                fontFamily: 'medium',
-                fontSize: 14,
-                color: selectID == id ? Colors.white : Colors.black54)),
-      ),
-    );
-  }
+  // Widget _buildSelect(title, id) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       // setState(() {
+  //       //   selectID = id;
+  //       // });
+  //     },
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 50),
+  //       margin: const EdgeInsets.symmetric(vertical: 4),
+  //       decoration: BoxDecoration(
+  //         border: Border.all(color: Colors.black12),
+  //         color: selectID == id ? appColor : Colors.transparent,
+  //         borderRadius: const BorderRadius.all(Radius.circular(50.0)),
+  //       ),
+  //       child: Text(title,
+  //           style: TextStyle(
+  //               fontFamily: 'medium',
+  //               fontSize: 14,
+  //               color: selectID == id ? Colors.white : Colors.black54)),
+  //     ),
+  //   );
+  // }
 
   Widget _buildSkils(val) {
     return Container(

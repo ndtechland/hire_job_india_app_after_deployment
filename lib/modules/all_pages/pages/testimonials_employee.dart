@@ -108,7 +108,7 @@ class TestimonialView extends StatelessWidget {
                             child: _alltestimonialController
                                     .foundtestmonial.isEmpty
                                 ? Center(
-                                    child: Text("No Job Found"),
+                                    child: Text("No Testimonial Found"),
                                   )
                                 : ListView.builder(
                                     shrinkWrap: true,

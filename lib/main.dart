@@ -14,17 +14,20 @@ import 'controllers/user_profile_controller/user_profile_controller.dart';
 import 'controllers/view_job_controller/job_controllersss.dart';
 import 'modules/splash_screen/splash_screen.dart';
 
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
+void setupLazyLoading() {
+  Get.lazyPut(() => BottomNavigationBarController());
+  Get.lazyPut(() => AllJibsController());
+  Get.lazyPut(() => ProfileController());
+  Get.lazyPut(() => HomedashboardController());
+  Get.lazyPut(() => CompanyDetailController());
+  Get.lazyPut(() => AllcompanyController());
+  Get.lazyPut(() => ProfileController());
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setupLazyLoading();
+
   HttpOverrides.global = MyHttpOverrides();
   await FlutterDownloader.initialize(debug: true);
   await Permission.storage.request();
@@ -32,6 +35,15 @@ Future<void> main() async {
   FlutterDownloader.registerCallback(downloadCallback);
 
   runApp(const MyApp());
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }
 
 void downloadCallback(String id, int status, int progress) {
@@ -52,26 +64,30 @@ class MyApp extends StatelessWidget {
         backgroundColor: appColor,
         dividerColor: Colors.transparent,
       ),
-      home: Scaffold(
-        body:
-
-            ///HomeEmployee(),
-            SplashScreen(),
-      ),
-      initialBinding: BindingsBuilder(() {
-        Get.lazyPut<BottomNavigationBarController>(
-            () => BottomNavigationBarController());
-        Get.lazyPut<AllJibsController>(() => AllJibsController());
-        Get.lazyPut<ProfileController>(() => ProfileController());
-        Get.lazyPut<HomedashboardController>(() => HomedashboardController());
-        Get.lazyPut<AllJibsController>(() => AllJibsController());
-        Get.lazyPut<CompanyDetailController>(() => CompanyDetailController());
-        Get.lazyPut<AllcompanyController>(() => AllcompanyController());
-        // AllcompanyController _allcompanyController = Get.find();
-        //   CompanyDetailController _companyDetailController = Get.find();
-
-        //HomedashboardController
-      }),
+      home: SplashScreen(),
+      // Scaffold(
+      //   body:
+      //
+      //       ///HomeEmployee(),
+      //       SplashScreen(),
+      // ),
+      // initialBinding: BindingsBuilder(() {
+      //   Get.lazyPut<BottomNavigationBarController>(
+      //       () => BottomNavigationBarController());
+      //   Get.lazyPut<AllJibsController>(() => AllJibsController());
+      //   Get.lazyPut<ProfileController>(() => ProfileController());
+      //   Get.lazyPut<HomedashboardController>(() => HomedashboardController());
+      //   Get.lazyPut<AllJibsController>(() => AllJibsController());
+      //   Get.lazyPut<CompanyDetailController>(() => CompanyDetailController());
+      //   Get.lazyPut<AllcompanyController>(() => AllcompanyController());
+      //   Get.lazyPut<ProfileController>(() => ProfileController());
+      //
+      //   //Profile2Controller
+      //   // AllcompanyController _allcompanyController = Get.find();
+      //   //   CompanyDetailController _companyDetailController = Get.find();
+      //
+      //   //HomedashboardController
+      // }),
     );
   }
 }

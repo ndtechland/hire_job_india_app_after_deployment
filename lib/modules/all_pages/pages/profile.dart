@@ -56,7 +56,15 @@ class Profile extends StatelessWidget {
                         children: [
                           blackHeadingSmall('Basic Informations'.toUpperCase()),
                           GestureDetector(
-                              onTap: () {}, child: appcolorText('Edit'))
+                              onTap: () {
+                                _getprofilee.profileApi();
+                                // Update UI after fetching profile information
+                                _getprofilee.update();
+                                _getprofilee.getprofileModel?.response?.id
+                                    .toString();
+                                Get.to(EditProfile());
+                              },
+                              child: appcolorText('Edit'))
                         ],
                       ),
                     ),
@@ -254,7 +262,15 @@ class Profile extends StatelessWidget {
                         children: [
                           blackHeadingSmall('Location'.toUpperCase()),
                           GestureDetector(
-                              onTap: () {}, child: appcolorText('Edit'))
+                              onTap: () {
+                                _getprofilee.profileApi();
+                                // Update UI after fetching profile information
+                                _getprofilee.update();
+                                _getprofilee.getprofileModel?.response?.id
+                                    .toString();
+                                Get.to(EditProfile());
+                              },
+                              child: appcolorText('Edit'))
                         ],
                       ),
                     ),
@@ -394,21 +410,25 @@ class Profile extends StatelessWidget {
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  responsiveText(
-                                    text:
-                                        "${_getprofilee.getprofileModel?.response?.address}",
-                                    fontSizeLandscape:
-                                        MediaQuery.of(context).size.height *
-                                            0.03,
-                                    fontSizePortrait:
-                                        MediaQuery.of(context).size.height *
-                                            0.016,
-                                    // style: TextStyle(
-                                    //     fontSize: 12,
-                                    //     fontFamily: 'medium',
-                                    //     color: Colors.black),
-                                    context: context,
-                                    //text: '',
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.63,
+                                    child: responsiveText(
+                                      text:
+                                          "${_getprofilee.getprofileModel?.response?.address}",
+                                      fontSizeLandscape:
+                                          MediaQuery.of(context).size.height *
+                                              0.02,
+                                      fontSizePortrait:
+                                          MediaQuery.of(context).size.height *
+                                              0.016,
+                                      // style: TextStyle(
+                                      //     fontSize: 12,
+                                      //     fontFamily: 'medium',
+                                      //     color: Colors.black),
+                                      context: context,
+                                      //text: '',
+                                    ),
                                   ),
                                 ],
                               ),
@@ -512,7 +532,15 @@ class Profile extends StatelessWidget {
                         children: [
                           blackHeadingSmall('My Resume'.toUpperCase()),
                           GestureDetector(
-                              onTap: () {}, child: appcolorText('Edit'))
+                              onTap: () {
+                                _getprofilee.profileApi();
+                                // Update UI after fetching profile information
+                                _getprofilee.update();
+                                _getprofilee.getprofileModel?.response?.id
+                                    .toString();
+                                Get.to(EditProfile());
+                              },
+                              child: appcolorText('Edit'))
                         ],
                       ),
                     ),
@@ -571,6 +599,7 @@ class Profile extends StatelessWidget {
                               _getprofilee.profileApi();
                               // Update UI after fetching profile information
                               _getprofilee.update();
+                              //_getprofilee.getprofileModel?.response?.id.toString();
 
                               // Get the URL of the PDF file from the profile information
                               final String? url = _getprofilee
@@ -711,6 +740,10 @@ class Profile extends StatelessWidget {
                 const SizedBox(width: 0),
                 IconButton(
                     onPressed: () {
+                      _getprofilee.profileApi();
+                      // Update UI after fetching profile information
+                      _getprofilee.update();
+                      _getprofilee.getprofileModel?.response?.id.toString();
                       Get.to(EditProfile());
                       // Navigator.pop(context);
                     },

@@ -1,7 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/home_page_employee.dart';
 
 import '../../../models/city_model.dart';
 import '../../../models/state_model.dart';
@@ -76,13 +79,48 @@ class EmployeeUpdatePersonalController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        print('Update Profile successfully!');
+        print('Profile Update successfully!');
+        Fluttertoast.showToast(
+          msg: 'Profile updated successfully!',
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 0, // Show toast for 1 second
+        );
+        // Show loading dialog before navigating
+        Get.dialog(
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+          barrierDismissible: false,
+        );
+
+        // Navigate to Home screen after a short delay (simulating asynchronous operation)
+        Future.delayed(Duration(seconds: 1), () {
+          Get.back(); // Close the loading dialog
+          Get.off(HomeEmployee()); // Navigate to Home screen
+        });
         print(response.body);
       } else {
-        print('Error Updation profile: ${response.statusCode}');
+        print('Error Update Profile: ${response.statusCode}');
+        Fluttertoast.showToast(
+          msg: 'Failed to update profile. Status code: ${response.statusCode}',
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
       }
     } catch (error) {
       print('Network error: $error');
+      Fluttertoast.showToast(
+        msg: 'Network error. Please try again.',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
     } finally {
       isLoading(false);
     }

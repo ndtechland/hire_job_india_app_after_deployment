@@ -27,8 +27,10 @@ class Company extends StatelessWidget {
     const Item('lib/assets/images/n4.png', 'Soft PVT. LTD.'),
   ];
 
-  AllcompanyController _allcompanyController = Get.find();
-  CompanyDetailController _companyDetailController = Get.find();
+  final AllcompanyController _allcompanyController =
+      Get.put(AllcompanyController());
+  final CompanyDetailController _companyDetailController =
+      Get.put(CompanyDetailController());
   bool _isLoading = false; // State variable to control loading indicator
 
   void _startDelayedAction(BuildContext context) {
@@ -163,16 +165,17 @@ class Company extends StatelessWidget {
                                   itemBuilder: (context, index) {
                                     final category = _allcompanyController
                                         .foundcompany[index];
-                                    if (category == null) return Container();
-                                    return GestureDetector(
-                                      onTap: () {
-                                        _allcompanyController.companyListApi();
+                                    if (category.id == null) return Container();
+                                    return InkWell(
+                                      onTap: () async {
+                                        await _allcompanyController
+                                            .companyListApi();
                                         _allcompanyController.update();
 
                                         // _companyDetailController.companydetailbyIdApi(
                                         //     category.id
                                         // );
-                                        _companyDetailController
+                                        await _companyDetailController
                                             .companydetailbyIdApi(
                                                 _allcompanyController
                                                     .foundcompany[index].id
@@ -180,11 +183,14 @@ class Company extends StatelessWidget {
                                         _companyDetailController.update();
 
                                         // Delay execution for 2 seconds
-                                        Future.delayed(
-                                            Duration(milliseconds: 00), () {
+                                        await Future.delayed(
+                                            Duration(milliseconds: 400), () {
+                                          // Get.to(CompanyDetail());
+
                                           _startDelayedAction(context);
-                                          print(
-                                              'Delayed action after 2 seconds');
+                                          // print(
+                                          //     'Delayed action after 2 seconds');
+                                          ///
                                           // Get.to(CompanyDetail());
                                           // Navigator.push(
                                           //   context,

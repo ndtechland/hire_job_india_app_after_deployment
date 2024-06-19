@@ -8,12 +8,12 @@ import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/home_page_em
 
 import '../../../services_apis/api_servicesss.dart';
 
-class BankEmployeeUodateController extends GetxController {
+class ProfilePictureEmployeController extends GetxController {
   final isLoading = false.obs;
 
   var selectedGender = ''.obs;
 
-  final GlobalKey<FormState> bankemployeeFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> profileimgemployeeFormKey = GlobalKey<FormState>();
 
   //final selectedGender = Gender.male.obs; // Add observable for selected gender
 
@@ -21,50 +21,21 @@ class BankEmployeeUodateController extends GetxController {
     selectedGender.value = servicee;
   }
 
-  Future<void> updateBankProfile({
-    required String accountHolderName,
-    required String bankname,
-    required String accountNumber,
-    required String reEnterAccountNumber,
-    required String ifsc,
-    required String accountTypeId,
-    required String epfNumber,
-    String? deductionCycle,
-    String? employeeContributionRate,
-    required String nominee,
-    required Uint8List cvFileContent,
-    required String Chequebase64, // Add this parameter
+  Future<void> updaprofilrimgProfile({
+    required Uint8List cvFileContent3,
+    required String Empprofile, // Add this parameter
   }) async {
     try {
       isLoading(true);
 
-      final Map<String, String> formData = {
-        'AccountHolderName': accountHolderName,
-        'BankName': bankname,
-        'AccountNumber': accountNumber,
-        'ReEnterAccountNumber': reEnterAccountNumber,
-        'Ifsc': ifsc,
-        'AccountTypeId': accountTypeId,
-        'EpfNumber': epfNumber,
-        'Nominee': nominee,
-      };
-
-      if (deductionCycle != null) {
-        formData['DeductionCycle'] = deductionCycle;
-      }
-
-      if (employeeContributionRate != null) {
-        formData['employeeContributionRate'] = employeeContributionRate;
-      }
-
       // Make API call
-      final response = await ApiProvider.updateBankEmployeeApi(
-          formData, cvFileContent, Chequebase64);
+      final response = await ApiProvider.updateProfileEmployeeApi(
+          cvFileContent3, Empprofile);
 
       print(response.body);
 
       if (response.statusCode == 200) {
-        print('Bank Update successfully!');
+        print('profile Update successfully!');
 
         Fluttertoast.showToast(
           msg: 'Profile updated successfully!',

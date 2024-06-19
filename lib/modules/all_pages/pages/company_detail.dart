@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 //import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hirejobindia/components/styles.dart';
@@ -110,11 +111,14 @@ String stripHtmlTags(String htmlString) {
 }
 
 class _CompanyDetailState extends State<CompanyDetail> {
+  double? _latitude;
+  double? _longitude;
+  bool _isLoading = true;
   final CompanyDetailController _companyDetailController =
       Get.put(CompanyDetailController());
-  HomePageController _homePageController = Get.put(HomePageController());
+  final HomePageController _homePageController = Get.put(HomePageController());
 
-  JobdetauilsbyJobIdController _jobdetauilsbyJobIdController =
+  final JobdetauilsbyJobIdController _jobdetauilsbyJobIdController =
       Get.put(JobdetauilsbyJobIdController());
 
   final RxBool isLoading = false.obs;
@@ -126,11 +130,42 @@ class _CompanyDetailState extends State<CompanyDetail> {
   bool _isValidUrl = true;
   late YoutubePlayerController _controller;
 
+  Future<void> _setInitialLocation() async {
+    String address = _companyDetailController
+            .companydetailbyIdmodel?.response?.companyAddress ??
+        "Not Available";
+    if (address != "Not Available") {
+      await _getCoordinates(address);
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _getCoordinates(String address) async {
+    try {
+      List<Location> locations = await locationFromAddress(address);
+      if (locations.isNotEmpty) {
+        Location firstLocation = locations.first;
+        setState(() {
+          _latitude = firstLocation.latitude;
+          _longitude = firstLocation.longitude;
+        });
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   void initState() {
+    _setInitialLocation();
+    //_companyDetailController.companydetailbyIdmodel?.response?.companyAddress
+    //.toString();
     // _setInitialLocation();
-    // _companyDetailController.companydetailbyIdApi();
+    //_companyDetailController.companydetailbyIdApi();
     super.initState();
+
     _initializeYoutubePlayer();
   }
 
@@ -213,7 +248,10 @@ class _CompanyDetailState extends State<CompanyDetail> {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-            "${_companyDetailController.companydetailbyIdmodel!.response!.organizationName}"
+            //                              "${_companyDetailController.companydetailbyIdmodel?.response?.companyAddress ?? "Not Available"}");
+            _companyDetailController
+                    .companydetailbyIdmodel?.response?.organizationName ??
+                "Company Detail"
 
             //'Prince Technology'
             ),
@@ -562,13 +600,28 @@ class _CompanyDetailState extends State<CompanyDetail> {
                       },
                       trailing: MyElevatedButton(
                         onPressed: () {
-                          MapsLauncher.launchQuery(
-                              "${_companyDetailController.companydetailbyIdmodel?.response?.companyAddress ?? "Not Available"}");
+                          if (_latitude != null && _longitude != null) {
+                            String address = _companyDetailController
+                                    .companydetailbyIdmodel
+                                    ?.response
+                                    ?.companyAddress ??
+                                "Not Available";
+                            MapsLauncher.launchCoordinates(
+                                _latitude!, _longitude!, address);
+                          } else {
+                            print('Coordinates are not available');
+                            Get.snackbar("Error", "Address not found");
+                          }
+
+                          // MapsLauncher.createCoordinatesUri(
+                          //     'Latitude: ${_latitude ?? "Unknown"}',
+                          //     Longitude: ${_longitude ?? "Unknown"}'
+                          //     "${_companyDetailController.companydetailbyIdmodel?.response?.companyAddress ?? "Not Available"}");
 
                           /// usersatartlat,
                           // usersatartlang,
                           // "${userstartlocation}"
-                          Navigator.of(context).pop();
+                          //Navigator.of(context).pop();
 
                           ///todo: we can use url launcher butr after launching it will shoing error....
                           // launchMaps(

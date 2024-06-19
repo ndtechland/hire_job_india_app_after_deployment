@@ -14,6 +14,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../../../controllers/employee_controller/profile_controller/profile_info_employee_controller.dart';
 import '../../../../../../controllers/employeee_controllersss/employee_edit_profile_controller/employee_update_personal_controller.dart';
+import '../../../../../../controllers/employeee_controllersss/update_profile_image_controller/update_profile_image.dart';
 import '../../../../../../models/city_model.dart';
 import '../../../../../../models/state_model.dart';
 import '../../../../../../widget/elevated_button.dart';
@@ -32,6 +33,9 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
   final EmployeeUpdatePersonalController _employeeUpdatePersonalController =
       Get.put(EmployeeUpdatePersonalController());
 
+  ProfilePictureEmployeController _profilePictureEmployeController =
+      Get.put(ProfilePictureEmployeController());
+
   final ProfileEmployeeController _getprofileepersonal =
       Get.put(ProfileEmployeeController());
 
@@ -48,19 +52,102 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
 
   String dropdownValueZip = '110096';
 
+  final TextEditingController _profileimagePathController =
+      TextEditingController();
+
   //final TextEditingController _aadhaarController = TextEditingController();
   final TextEditingController _panFilePathController = TextEditingController();
 
   final TextEditingController _aadharFilePathController =
       TextEditingController();
 
+  // final TextEditingController _dateOfBirthController = TextEditingController();
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
+  final TextEditingController _mobileNumberController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
 
-  Uint8List? _aadharFileContent;
+  final TextEditingController _fathernameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _pannoController = TextEditingController();
+  final TextEditingController _address1Controller = TextEditingController();
+  final TextEditingController _address2Controller = TextEditingController();
+  final TextEditingController _pincodeController = TextEditingController();
+  final TextEditingController _aadharnoController = TextEditingController();
+
+  Uint8List? cvFileContent3;
 
   Uint8List? _panFileContent;
 
   List<Uint8List> _aadharImages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (_getprofileepersonal.getprofileemployeeModel != null) {
+      _nameController.text =
+          _getprofileepersonal.getprofileemployeeModel?.data?.name ?? "";
+      _emailController.text = _getprofileepersonal
+              .getprofileemployeeModel?.data?.personalEmailAddress ??
+          "";
+      _mobileNumberController.text = _getprofileepersonal
+              .getprofileemployeeModel?.data?.mobileNumber
+              .toString() ??
+          "";
+      _dateOfBirthController.text = _getprofileepersonal
+              .getprofileemployeeModel?.data?.dateOfBirth
+              .toString() ??
+          "";
+      _fathernameController.text = _getprofileepersonal
+              .getprofileemployeeModel?.data?.fatherName
+              .toString() ??
+          "";
+      _ageController.text =
+          _getprofileepersonal.getprofileemployeeModel?.data?.age.toString() ??
+              "";
+      _pannoController.text =
+          _getprofileepersonal.getprofileemployeeModel?.data?.pan.toString() ??
+              "";
+      _address1Controller.text = _getprofileepersonal
+              .getprofileemployeeModel?.data?.addressLine1
+              .toString() ??
+          "";
+      _address2Controller.text = _getprofileepersonal
+              .getprofileemployeeModel?.data?.addressLine2
+              .toString() ??
+          "";
+      _pincodeController.text = _getprofileepersonal
+              .getprofileemployeeModel?.data?.pincode
+              .toString() ??
+          "";
+      _aadharnoController.text = _getprofileepersonal
+              .getprofileemployeeModel?.data?.aadharNo
+              .toString() ??
+          "";
+      //_aadharnoController
+    }
+  }
+
+  String formatDateOfBirth(String dateOfBirthString) {
+    try {
+      DateFormat inputFormat = DateFormat("dd/MM/yyyy");
+      DateTime dateOfBirth = inputFormat.parse(dateOfBirthString);
+      DateFormat outputFormat = DateFormat("dd-MM-yyyy");
+      return outputFormat.format(dateOfBirth);
+    } catch (e) {
+      try {
+        DateFormat inputFormat = DateFormat("yyyy-MM-dd");
+        DateTime dateOfBirth = inputFormat.parse(dateOfBirthString);
+        DateFormat outputFormat = DateFormat("dd-MM-yyyy");
+        return outputFormat.format(dateOfBirth);
+      } catch (e) {
+        print('Error parsing date: $e');
+        return dateOfBirthString;
+      }
+    }
+  }
 
   // Gender? _selectedGender = Gender.male;
   Future<void> _checkAndRequestPermissions(context) async {
@@ -85,6 +172,20 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
       await Permission.storage.request();
       if (await Permission.storage.isGranted) {
         _selectPanFile(context);
+      } else {
+        print('Storage permission is required to access files.');
+      }
+    }
+  }
+
+  ///3 profile..
+  Future<void> _checkAndRequestPermissions3(context) async {
+    if (await Permission.storage.request().isGranted) {
+      _selectimageprofileFile(context);
+    } else {
+      await Permission.storage.request();
+      if (await Permission.storage.isGranted) {
+        _selectimageprofileFile(context);
       } else {
         print('Storage permission is required to access files.');
       }
@@ -167,6 +268,48 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
     }
   }
 
+  Future<void> _selectimageprofileFile(BuildContext context) async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: [
+          'jpg',
+          'jpeg',
+          'png',
+        ],
+        withData: true, // Ensure the file picker reads the file data
+      );
+      if (result != null && result.files.isNotEmpty) {
+        PlatformFile file = result.files.first;
+        print('Selected file: ${file.name}, path: ${file.path}');
+
+        if (file.size! <= 20 * 1024 * 1024) {
+          // Check if file size is less than or equal to 10MB
+          if (file.bytes != null) {
+            _profileimagePathController.text = file.name;
+            cvFileContent3 = file.bytes!;
+            print('File size: ${cvFileContent3!.length} bytes');
+          } else {
+            print('Failed to read file content: File bytes are null');
+          }
+        } else {
+          Fluttertoast.showToast(
+              msg: "Selected file exceeds 20MB limit",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      } else {
+        print('No file selected');
+      }
+    } catch (e) {
+      print('Error picking file: $e');
+    }
+  }
+
   var selectedDate = DateTime.now().obs;
 
   chooseDate() async {
@@ -201,52 +344,6 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    final TextEditingController _emailController = TextEditingController(
-        text: _getprofileepersonal
-                .getprofileemployeeModel?.data?.personalEmailAddress ??
-            "");
-    final TextEditingController _nameController = TextEditingController(
-        text: _getprofileepersonal.getprofileemployeeModel?.data?.name ?? "");
-
-    final TextEditingController _mobileNumberController = TextEditingController(
-        text: _getprofileepersonal.getprofileemployeeModel?.data?.mobileNumber
-                .toString() ??
-            "");
-    final TextEditingController _dateOfBirthController = TextEditingController(
-        text: _getprofileepersonal.getprofileemployeeModel?.data?.dateOfBirth
-                .toString() ??
-            "");
-
-    final TextEditingController _fathernameController = TextEditingController(
-        text: _getprofileepersonal.getprofileemployeeModel?.data?.fatherName
-                .toString() ??
-            "");
-    final TextEditingController _ageController = TextEditingController(
-        text: _getprofileepersonal.getprofileemployeeModel?.data?.age
-                .toString() ??
-            "");
-    final TextEditingController _pannoController = TextEditingController(
-        text: _getprofileepersonal.getprofileemployeeModel?.data?.pan
-                .toString() ??
-            "");
-    final TextEditingController _address1Controller = TextEditingController(
-        text: _getprofileepersonal.getprofileemployeeModel?.data?.addressLine1
-                .toString() ??
-            "");
-    final TextEditingController _address2Controller = TextEditingController(
-        text: _getprofileepersonal.getprofileemployeeModel?.data?.addressLine2
-                .toString() ??
-            "");
-    final TextEditingController _pincodeController = TextEditingController(
-        text: _getprofileepersonal.getprofileemployeeModel?.data?.pincode
-                .toString() ??
-            "");
-    final TextEditingController _aadharnoController = TextEditingController(
-        //text: "343322"
-        text: _getprofileepersonal.getprofileemployeeModel?.data?.aadharNo
-                .toString() ??
-            "");
 
     ///
     String imageUrl =
@@ -334,18 +431,18 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                               padding: EdgeInsets.symmetric(vertical: 0),
                               child: TextFormField(
                                 controller: _emailController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter Email';
-                                  }
-                                  // Regular expression for email validation
-                                  final emailRegex = RegExp(
-                                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                                  if (!emailRegex.hasMatch(value)) {
-                                    return 'Please enter a valid email address';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Please enter Email';
+                                //   }
+                                //   // Regular expression for email validation
+                                //   final emailRegex = RegExp(
+                                //       r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                                //   if (!emailRegex.hasMatch(value)) {
+                                //     return 'Please enter a valid email address';
+                                //   }
+                                //   return null;
+                                // },
                                 decoration: InputDecoration(
                                   labelText: "Email Id",
                                   hintStyle: (TextStyle(
@@ -372,17 +469,17 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                   LengthLimitingTextInputFormatter(10)
                                 ],
                                 controller: _mobileNumberController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter Mobile no.';
-                                  }
-                                  // Regular expression for exactly 10 digits
-                                  final mobileRegex = RegExp(r'^[0-9]{10}$');
-                                  if (!mobileRegex.hasMatch(value)) {
-                                    return 'Mobile number should be exactly 10 digits long';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Please enter Mobile no.';
+                                //   }
+                                //   // Regular expression for exactly 10 digits
+                                //   final mobileRegex = RegExp(r'^[0-9]{10}$');
+                                //   if (!mobileRegex.hasMatch(value)) {
+                                //     return 'Mobile number should be exactly 10 digits long';
+                                //   }
+                                //   return null;
+                                // },
                                 decoration: InputDecoration(
                                   labelText: "Phone Number",
                                   hintStyle: (TextStyle(
@@ -412,7 +509,7 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                   return null;
                                 },
                                 onTap: () {
-                                  chooseDate();
+                                  //chooseDate();
                                 },
                                 decoration: InputDecoration(
                                   labelText: "Date Of Birth",
@@ -529,8 +626,8 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                         ),
                                       );
                                     }).toList(),
-                                    validator: (value) =>
-                                        value == null ? 'Select States' : null,
+                                    // validator: (value) =>
+                                    //     value == null ? 'Select States' : null,
                                     onChanged: (StateModelss? newValue) {
                                       _employeeUpdatePersonalController
                                           .selectedState.value = newValue!;
@@ -584,8 +681,8 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                       _employeeUpdatePersonalController
                                           .refresh();
                                     },
-                                    validator: (value) =>
-                                        value == null ? 'Select City' : null,
+                                    // validator: (value) =>
+                                    //     value == null ? 'Select City' : null,
                                     onChanged: (CityModell? newValue) {
                                       _employeeUpdatePersonalController
                                           .selectedCity.value = newValue!;
@@ -612,12 +709,12 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                               padding: EdgeInsets.symmetric(vertical: 0),
                               child: TextFormField(
                                 controller: _address1Controller,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter address 1';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Please enter address 1';
+                                //   }
+                                //   return null;
+                                // },
                                 decoration: InputDecoration(
                                   labelText: "Address Line 1",
                                   hintStyle: (TextStyle(
@@ -639,12 +736,12 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                               padding: EdgeInsets.symmetric(vertical: 0),
                               child: TextFormField(
                                 controller: _address2Controller,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter address 2';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Please enter address 2';
+                                //   }
+                                //   return null;
+                                // },
                                 decoration: InputDecoration(
                                   labelText: "Address Line 2",
                                   hintStyle: (TextStyle(
@@ -666,12 +763,12 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                               padding: EdgeInsets.symmetric(vertical: 0),
                               child: TextFormField(
                                 controller: _pincodeController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter pin';
-                                  }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Please enter pin';
+                                //   }
+                                //   return null;
+                                // },
                                 decoration: InputDecoration(
                                   labelText: "Pin Code",
                                   hintStyle: (TextStyle(
@@ -905,69 +1002,126 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                 ],
                               ),
                             ),
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 0),
+                              child: Row(
+                                children: [
+                                  // Expanded widget to ensure the TextField takes the remaining width
+                                  Expanded(
+                                    child: TextFormField(
+                                      readOnly: true,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select your Profile';
+                                        }
+                                        return null;
+                                      },
+                                      controller: _profileimagePathController,
+                                      decoration: InputDecoration(
+                                          labelText: 'Profile Picture'),
+                                      enabled: false,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                      width:
+                                          10), // Add some spacing between the TextField and the Button
+                                  Container(
+                                    width: 80,
+                                    height: 35,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ElevatedButton(
+                                      onPressed: () =>
+                                          _checkAndRequestPermissions3(
+                                              context), // Use a lambda function
+                                      style: ElevatedButton.styleFrom(
+                                        primary: appColor, // Button color
+                                        onPrimary: Colors.white, // Text color
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              10), // Rounded corners
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Profile\n Image',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             const SizedBox(height: 10),
                           ],
                         ),
                       ),
 
+                      //_checkAndRequestPermissions3
+
                       ///education end
                       ///
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
                       MyElevatedButton(
                         onPressed: () {
-                          // Here you can send `_aadharImages` to your backend API
-                          // Make sure to handle the list of Uint8List in your backend
-                          // For example:
-                          // sendAadharFilesToServer(_aadharImages);
-                          ///
-                          // if (_employeeloginController.loginFormKey2.currentState
-                          //     ?.validate() ??
-                          //     false) {
-                          //   _employeeloginController.checkemployeeLogin();
-                          // }
+                          String formattedDateOfBirth =
+                              formatDateOfBirth(_dateOfBirthController.text);
+                          // Use null-aware operators to handle potential null values
+                          String stateId = _employeeUpdatePersonalController
+                                  .selectedState.value?.id
+                                  .toString() ??
+                              _getprofileepersonal
+                                  .getprofileemployeeModel?.data?.stateid
+                                  ?.toString() ??
+                              "2";
+                          String cityId = _employeeUpdatePersonalController
+                                  .selectedCity.value?.id
+                                  .toString() ??
+                              _getprofileepersonal
+                                  .getprofileemployeeModel?.data?.cityid
+                                  ?.toString() ??
+                              "158";
+                          _employeeUpdatePersonalController
+                              .updateProfilePersonalApi(
+                            personalEmailAddress: _emailController.text,
+                            mobileNumber: _mobileNumberController.text,
+                            dateOfBirth: formattedDateOfBirth,
+                            age: _ageController.text,
+                            fatherName: _fathernameController.text,
+                            pAN: _pannoController.text,
+                            addressLine1: _address1Controller.text,
+                            addressLine2: _address2Controller.text,
+                            cityid: cityId,
+                            // _getprofileepersonal
+                            //     .getprofileemployeeModel!.data!.cityid
+                            //     .toString(),
+                            stateid: stateId,
+                            pincode: _pincodeController.text,
+                            aadharNo: _aadharnoController.text,
+                            aadharFileContent:
+                                _aadharImages, // Pass list of Aadhaar images
+                            Aadharbase64: _aadharFilePathController
+                                .text, // Pass Aadhar file name
+                            panFileContent:
+                                _panFileContent!, // Pass PAN file content
+                            Panbase64: _panFilePathController!
+                                .text, // Pass PAN file name
+                          );
 
-                          if (_employeeUpdatePersonalController
-                                  .personalinfoFormKey.currentState
-                                  ?.validate() ??
-                              false) {
-                            if (_panFileContent != null ||
-                                _panFileContent == null) {
-                              _employeeUpdatePersonalController
-                                  .updateProfilePersonalApi(
-                                personalEmailAddress: _emailController.text,
-                                mobileNumber: _mobileNumberController.text,
-                                dateOfBirth: _dateOfBirthController.text,
-                                age: _ageController.text,
-                                fatherName: _fathernameController.text,
-                                pAN: _pannoController.text,
-                                addressLine1: _address1Controller.text,
-                                addressLine2: _address2Controller.text,
-                                cityid: _getprofileepersonal
-                                    .getprofileemployeeModel!.data!.cityid
-                                    .toString(),
-                                stateid: _getprofileepersonal
-                                    .getprofileemployeeModel!.data!.stateid
-                                    .toString(),
-                                pincode: _pincodeController.text,
-                                aadharNo: _aadharnoController.text,
-                                aadharFileContent:
-                                    _aadharImages, // Pass list of Aadhaar images
-                                Aadharbase64: _aadharFilePathController
-                                    .text, // Pass Aadhar file name
-                                panFileContent:
-                                    _panFileContent!, // Pass PAN file content
-                                Panbase64: _panFilePathController!
-                                    .text, // Pass PAN file name
-                              );
-                              // await Future.delayed(Duration(seconds: 3));
+                          _profilePictureEmployeController
+                              .updaprofilrimgProfile(
+                            cvFileContent3: cvFileContent3!,
+                            Empprofile: _profileimagePathController.text,
+                          );
+                          // await Future.delayed(Duration(seconds: 3));
 
-                              ///Clear dropdown value
-                              //_profileController.selectedState.value = null;
-                              // _profileController.selectedCity.value = null;
-                            } else {
-                              print('Please select Aadhaar Image');
-                            }
-                          }
+                          ///Clear dropdown value
+                          //_profileController.selectedState.value = null;
+                          // _profileController.selectedCity.value = null;
                         },
                         text: Text('Update'),
                         height: 40,

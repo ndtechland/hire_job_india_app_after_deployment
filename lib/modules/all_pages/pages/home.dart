@@ -24,6 +24,8 @@ import '../../../controllers/user_profile_controller/user_profile_controller.dar
 import '../../../controllers/view_job_controller/job_controllersss.dart';
 import '../../../services_apis/auto_login_employee.dart';
 import '../../../widget/elevated_button2.dart';
+import 'company_detail.dart';
+import 'company_list_by_catagory_id.dart';
 import 'emploree_pages/employee_login.dart';
 import 'emploree_pages/home_page_employee.dart';
 import 'job_details.dart';
@@ -39,27 +41,28 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Item> cateList = <Item>[
-    const Item('lib/assets/images/c1.png', 'Developer'),
-    const Item('lib/assets/images/c2.png', 'Technology'),
-    const Item('lib/assets/images/c3.png', 'Accounting'),
-    const Item('lib/assets/images/c4.png', 'Engineer'),
-    const Item('lib/assets/images/c1.png', 'Developer'),
-    const Item('lib/assets/images/c2.png', 'Technology'),
-    const Item('lib/assets/images/c3.png', 'Accounting'),
-    const Item('lib/assets/images/c4.png', 'Engineer'),
-  ];
+  // List<Item> cateList = <Item>[
+  //   const Item('lib/assets/images/c1.png', 'Developer'),
+  //   const Item('lib/assets/images/c2.png', 'Technology'),
+  //   const Item('lib/assets/images/c3.png', 'Accounting'),
+  //   const Item('lib/assets/images/c4.png', 'Engineer'),
+  //   const Item('lib/assets/images/c1.png', 'Developer'),
+  //   const Item('lib/assets/images/c2.png', 'Technology'),
+  //   const Item('lib/assets/images/c3.png', 'Accounting'),
+  //   const Item('lib/assets/images/c4.png', 'Engineer'),
+  // ];
+  ///
 
-  List<Item> companyList = <Item>[
-    const Item('lib/assets/images/n3.png', 'Prince Tech'),
-    const Item('lib/assets/images/n2.png', 'Nd Info'),
-    const Item('lib/assets/images/n1.png', 'TechMahindra IT'),
-    const Item('lib/assets/images/n4.png', 'PVT2. LTD.'),
-    const Item('lib/assets/images/n3.png', 'Prince Tech'),
-    const Item('lib/assets/images/n2.png', 'Gorge Info'),
-    const Item('lib/assets/images/n1.png', 'TATA IT'),
-    const Item('lib/assets/images/n4.png', 'CHEM PVT. LTD.'),
-  ];
+  // List<Item> companyList = <Item>[
+  //   const Item('lib/assets/images/n3.png', 'Prince Tech'),
+  //   const Item('lib/assets/images/n2.png', 'Nd Info'),
+  //   const Item('lib/assets/images/n1.png', 'TechMahindra IT'),
+  //   const Item('lib/assets/images/n4.png', 'PVT2. LTD.'),
+  //   const Item('lib/assets/images/n3.png', 'Prince Tech'),
+  //   const Item('lib/assets/images/n2.png', 'Gorge Info'),
+  //   const Item('lib/assets/images/n1.png', 'TATA IT'),
+  //   const Item('lib/assets/images/n4.png', 'CHEM PVT. LTD.'),
+  // ];
   @override
   void initState() {
     super.initState();
@@ -86,6 +89,24 @@ class _HomeState extends State<Home> {
 
   CompanyDetailController _companyDetailController =
       Get.put(CompanyDetailController());
+
+  void _startDelayedAction(BuildContext context) {
+    // Simulate delayed action
+    Future.delayed(Duration(milliseconds: 00), () {
+      print('Delayed action after 1 second');
+
+      // Navigate to CompanyDetail after delay
+      Get.to(CompanyDetail());
+
+      // Alternatively, if using Navigator.push:
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => CompanyDetail(),
+      //   ),
+      // );
+    });
+  }
 
   String stripHtmlTags(String htmlString) {
     final RegExp exp = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: true);
@@ -162,6 +183,19 @@ class _HomeState extends State<Home> {
         return LayoutBuilder(builder: (context, constraints) {
           final RxBool isLoading = false.obs;
 
+          // Determine if the device is in portrait or landscape mode
+          bool isPortrait =
+              MediaQuery.of(context).orientation == Orientation.portrait;
+
+          // Set dimensions based on orientation
+          double containerWidth = isPortrait
+              ? MediaQuery.of(context).size.width * 0.32
+              : MediaQuery.of(context).size.width * 0.16;
+
+          double containerHeight = isPortrait
+              ? MediaQuery.of(context).size.height * 0.13
+              : MediaQuery.of(context).size.height * 0.27;
+
           // Getting the size of the screen
           var screenWidth = constraints.maxWidth;
           var screenHeight = constraints.maxHeight;
@@ -226,12 +260,25 @@ class _HomeState extends State<Home> {
                         children: _allcatagoryController.foundcategory
                             .map((category) {
                           return GestureDetector(
-                            onTap: () {},
+                            onTap: () async {
+                              _allJibsController
+                                  .jobListByCatIDApi(category.id.toInt());
+                              _allJibsController.update();
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewJobListOnID(),
+                                  //const CompanyDetail(),
+                                ),
+                              );
+                            },
                             child: Container(
                               margin: const EdgeInsets.only(
                                   top: 16, bottom: 16, right: 12),
-                              width: 110,
-                              height: 90,
+                              // width: 110,
+                              // height: 90,
+                              width: containerWidth,
+                              height: containerHeight,
                               clipBehavior: Clip.antiAlias,
                               decoration: const BoxDecoration(
                                 color: Colors.white,
@@ -249,20 +296,19 @@ class _HomeState extends State<Home> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Spacer(),
-
                                   responsiveContainer(
                                     // padding: const EdgeInsets.only(right: 0),
                                     //height: 20,
                                     //width: 20,
                                     heightPortrait:
                                         MediaQuery.of(context).size.height *
-                                            0.055,
+                                            0.057,
                                     widthPortrait:
                                         MediaQuery.of(context).size.width *
                                             0.12,
                                     heightLandscape:
                                         MediaQuery.of(context).size.height *
-                                            0.1,
+                                            0.12,
                                     widthLandscape:
                                         MediaQuery.of(context).size.width *
                                             0.06,
@@ -274,7 +320,7 @@ class _HomeState extends State<Home> {
                                             FixedText.imgurl +
                                                 category.postedImage.toString(),
                                             color: appColor,
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.cover,
                                             errorBuilder:
                                                 (context, error, stackTrace) {
                                               return Image.asset(
@@ -290,13 +336,17 @@ class _HomeState extends State<Home> {
                                     context: context,
                                   ),
                                   Spacer(),
-                                  responsiveText(
-                                    context: context,
-                                    text:
-                                        "${category?.postedtype ?? 'Unknown Category'}",
-                                    fontSizePortrait: 10,
-                                    fontSizeLandscape: 10,
-                                    color: Colors.black,
+                                  SizedBox(
+                                    width: containerWidth,
+                                    height: containerHeight * 0.16,
+                                    child: responsiveText(
+                                      context: context,
+                                      text:
+                                          "${category?.postedtype ?? 'Unknown Category'}",
+                                      fontSizePortrait: 10,
+                                      fontSizeLandscape: 10,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                   Spacer(),
                                   // boldTextcat(category?.postedtype ??
@@ -437,8 +487,8 @@ class _HomeState extends State<Home> {
                                           child: Container(
                                             padding: const EdgeInsets.only(
                                                 right: 10),
-                                            height: textfieldHeight * 0.26,
-                                            width: textfieldWidth * 0.19,
+                                            height: textfieldHeight * 0.25,
+                                            width: textfieldWidth * 0.25,
                                             child: ClipOval(
                                               clipBehavior: Clip.none,
                                               child: Image.network(
@@ -447,7 +497,7 @@ class _HomeState extends State<Home> {
                                                             .foundJobs[index]
                                                             .companyImage ??
                                                         ""),
-                                                fit: BoxFit.fill,
+                                                fit: BoxFit.contain,
                                                 errorBuilder: (context, error,
                                                     stackTrace) {
                                                   return ClipOval(
@@ -636,11 +686,16 @@ class _HomeState extends State<Home> {
                       GestureDetector(
                           onTap: () async {
                             await _allcompanyController.companyListApi();
+                            await _companyDetailController
+                                .companydetailbyIdApi();
+                            _companyDetailController.update();
                             _allcompanyController.update();
-                            await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Company()));
+
+                            await Get.off(Company());
+                            // await Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => Company()));
                           },
                           child: appcolorText('See All'))
                     ],
@@ -661,7 +716,37 @@ class _HomeState extends State<Home> {
                         children:
                             _allcompanyController.foundcompany.map((category) {
                           return GestureDetector(
-                            onTap: () {},
+                            onTap: () async {
+                              await _allcompanyController.companyListApi();
+                              _allcompanyController.update();
+
+                              // _companyDetailController.companydetailbyIdApi(
+                              //     category.id
+                              // );
+                              await _companyDetailController
+                                  .companydetailbyIdApi(category.id?.toInt());
+                              _companyDetailController.update();
+
+                              // Delay execution for 2 seconds
+                              await Future.delayed(Duration(milliseconds: 100),
+                                  () {
+                                // Get.to(CompanyDetail());
+
+                                _startDelayedAction(context);
+                                // print(
+                                //     'Delayed action after 2 seconds');
+                                ///
+                                // Get.to(CompanyDetail());
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) =>
+                                //         CompanyDetail(),
+                                //   ),
+                                // );
+                                // Add your code here that you want to execute after the delay
+                              });
+                            },
                             child: Container(
                               margin: const EdgeInsets.only(
                                   top: 16, bottom: 16, right: 12),
@@ -691,10 +776,10 @@ class _HomeState extends State<Home> {
                                     //width: 20,
                                     heightPortrait:
                                         MediaQuery.of(context).size.height *
-                                            0.055,
+                                            0.07,
                                     widthPortrait:
                                         MediaQuery.of(context).size.width *
-                                            0.12,
+                                            0.17,
                                     heightLandscape:
                                         MediaQuery.of(context).size.height *
                                             0.1,
@@ -710,7 +795,7 @@ class _HomeState extends State<Home> {
                                                 category.companyImage
                                                     .toString(),
                                             //color: appColor,
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.contain,
                                             errorBuilder:
                                                 (context, error, stackTrace) {
                                               return Image.asset(
@@ -725,6 +810,7 @@ class _HomeState extends State<Home> {
                                           ),
                                     context: context,
                                   ),
+
                                   Spacer(),
                                   responsiveText(
                                     context: context,
@@ -1096,17 +1182,17 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: 2,
-                physics: const ScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, i) => Column(
-                  children: [_buildJobs()],
-                ),
-              )),
+          // SingleChildScrollView(
+          //     padding: const EdgeInsets.symmetric(vertical: 8),
+          //     child: ListView.builder(
+          //       padding: EdgeInsets.zero,
+          //       itemCount: 2,
+          //       physics: const ScrollPhysics(),
+          //       shrinkWrap: true,
+          //       itemBuilder: (context, i) => Column(
+          //         children: [_buildJobs()],
+          //       ),
+          //     )),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -1167,8 +1253,9 @@ class _HomeState extends State<Home> {
                                 // padding: const EdgeInsets.only(right: 0),
                                 //height: 20,
                                 //width: 20,
+
                                 heightPortrait:
-                                    MediaQuery.of(context).size.height * 0.055,
+                                    MediaQuery.of(context).size.height * 0.06,
                                 widthPortrait:
                                     MediaQuery.of(context).size.width * 0.12,
                                 heightLandscape:
@@ -1183,7 +1270,7 @@ class _HomeState extends State<Home> {
                                         FixedText.imgurl +
                                             category.companyImage.toString(),
                                         //color: appColor,
-                                        fit: BoxFit.fill,
+                                        fit: BoxFit.cover,
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return Image.asset(
@@ -1200,13 +1287,24 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             Spacer(),
-                            responsiveText(
+                            responsiveContainer(
+                              heightPortrait:
+                                  MediaQuery.of(context).size.height * 0.015,
+                              widthPortrait:
+                                  MediaQuery.of(context).size.width * 0.2,
+                              heightLandscape:
+                                  MediaQuery.of(context).size.height * 0.1,
+                              widthLandscape:
+                                  MediaQuery.of(context).size.width * 0.2,
+                              child: responsiveText(
+                                context: context,
+                                text:
+                                    "${category?.organizationName ?? 'Unknown organisation'}",
+                                fontSizePortrait: 10,
+                                fontSizeLandscape: 10,
+                                color: Colors.black,
+                              ),
                               context: context,
-                              text:
-                                  "${category?.organizationName ?? 'Unknown Category'}",
-                              fontSizePortrait: 10,
-                              fontSizeLandscape: 10,
-                              color: Colors.black,
                             ),
                             Spacer(),
                             // boldTextcat(category?.postedtype ??
@@ -1240,204 +1338,208 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: 2,
-                physics: const ScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, i) => Column(
-                  children: [_buildJobs()],
-                ),
-              )),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                blackHeadingSmall('Our Testimonial'.toUpperCase()),
-                appcolorText('See All')
-              ],
-            ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Container(
-              padding: const EdgeInsets.only(left: 16),
-              child: Row(
-                children: cateList.map((e) {
-                  return _buildTestimonial(context, e);
-                }).toList(),
-              ),
-            ),
-          ),
+          // SingleChildScrollView(
+          //     padding: const EdgeInsets.symmetric(vertical: 8),
+          //     child: ListView.builder(
+          //       padding: EdgeInsets.zero,
+          //       itemCount: 2,
+          //       physics: const ScrollPhysics(),
+          //       shrinkWrap: true,
+          //       itemBuilder: (context, i) => Column(
+          //         children: [_buildJobs()],
+          //       ),
+          //     )),
+          ///
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       blackHeadingSmall('Our Testimonial'.toUpperCase()),
+          //       appcolorText('See All')
+          //     ],
+          //   ),
+          // ),
+          ///
+          // SingleChildScrollView(
+          //   scrollDirection: Axis.horizontal,
+          //   child: Container(
+          //     padding: const EdgeInsets.only(left: 16),
+          //     child: Row(
+          //       children: cateList.map((e) {
+          //         return _buildTestimonial(context, e);
+          //       }).toList(),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
-  Widget _buildCategory(context, e) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-          margin: const EdgeInsets.only(top: 16, bottom: 16, right: 12),
-          width: 110,
-          height: 90,
-          clipBehavior: Clip.antiAlias,
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(2, 2),
-                  blurRadius: 8,
-                  color: Color.fromRGBO(0, 0, 0, 0.16),
-                )
-              ],
-              borderRadius: BorderRadius.all(Radius.circular(6))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                e.img,
-                width: 30,
-                height: 30,
-                color: appColor,
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(height: 4),
-              boldText(e.name),
-              const SizedBox(height: 4),
-              greyTextSmall('(108 jobs)')
-            ],
-          )),
-    );
-  }
+  // Widget _buildCategory(context, e) {
+  //   return GestureDetector(
+  //     onTap: () {},
+  //     child: Container(
+  //         margin: const EdgeInsets.only(top: 16, bottom: 16, right: 12),
+  //         width: 110,
+  //         height: 90,
+  //         clipBehavior: Clip.antiAlias,
+  //         decoration: const BoxDecoration(
+  //             color: Colors.white,
+  //             boxShadow: [
+  //               BoxShadow(
+  //                 offset: Offset(2, 2),
+  //                 blurRadius: 8,
+  //                 color: Color.fromRGBO(0, 0, 0, 0.16),
+  //               )
+  //             ],
+  //             borderRadius: BorderRadius.all(Radius.circular(6))),
+  //         child: Column(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: [
+  //             Image.asset(
+  //               e.img,
+  //               width: 30,
+  //               height: 30,
+  //               color: appColor,
+  //               fit: BoxFit.cover,
+  //             ),
+  //             const SizedBox(height: 4),
+  //             boldText(e.name),
+  //             const SizedBox(height: 4),
+  //             greyTextSmall('(108 jobs)')
+  //           ],
+  //         )),
+  //   );
+  // }
+  ///
 
-  Widget _buildJobs() {
-    return GestureDetector(
-      onTap: () {
-        // Navigator.push(context,
-        //     MaterialPageRoute(builder: (context) => const JobDetails()));
-      },
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 20.0,
-            ),
-          ],
-          borderRadius: BorderRadius.all(Radius.circular(6.0)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Image.asset('lib/assets/images/n4.png',
-                        width: 30, height: 30)),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      blackHeadingSmall('Flutter Developer'),
-                      greyTextSmall('Micro Tech. Noida India')
-                    ],
-                  ),
-                ),
-                const Icon(Icons.bookmark, color: appColor, size: 16),
-              ],
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: greyTextSmall(
-                  'It is a established company and it is good for employees and environment is very healthy..'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                boldText('₹ 3,50,000- ₹8,50,000 a year'),
-                MyElevatedButton(
-                    onPressed: () {},
-                    text: btnText('Apply'),
-                    height: 28,
-                    width: 80)
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildJobs() {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       // Navigator.push(context,
+  //       //     MaterialPageRoute(builder: (context) => const JobDetails()));
+  //     },
+  //     child: Container(
+  //       padding: const EdgeInsets.all(16),
+  //       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+  //       decoration: const BoxDecoration(
+  //         color: Colors.white,
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Colors.black12,
+  //             blurRadius: 20.0,
+  //           ),
+  //         ],
+  //         borderRadius: BorderRadius.all(Radius.circular(6.0)),
+  //       ),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               Container(
+  //                   padding: const EdgeInsets.only(right: 10),
+  //                   child: Image.asset('lib/assets/images/n4.png',
+  //                       width: 30, height: 30)),
+  //               Expanded(
+  //                 child: Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     blackHeadingSmall('Flutter Developer'),
+  //                     greyTextSmall('Micro Tech. Noida India')
+  //                   ],
+  //                 ),
+  //               ),
+  //               const Icon(Icons.bookmark, color: appColor, size: 16),
+  //             ],
+  //           ),
+  //           Container(
+  //             padding: const EdgeInsets.symmetric(vertical: 8),
+  //             child: greyTextSmall(
+  //                 'It is a established company and it is good for employees and environment is very healthy..'),
+  //           ),
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               boldText('₹ 3,50,000- ₹8,50,000 a year'),
+  //               MyElevatedButton(
+  //                   onPressed: () {},
+  //                   text: btnText('Apply'),
+  //                   height: 28,
+  //                   width: 80)
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+  ///
 
-  Widget _buildTestimonial(context, e) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-          margin: const EdgeInsets.only(top: 16, bottom: 16, right: 12),
-          padding: const EdgeInsets.all(10),
-          width: 220,
-          height: 160,
-          clipBehavior: Clip.antiAlias,
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(2, 2),
-                  blurRadius: 8,
-                  color: Color.fromRGBO(0, 0, 0, 0.16),
-                )
-              ],
-              borderRadius: BorderRadius.all(Radius.circular(6))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Image.asset('lib/assets/images/p2.jpg',
-                          fit: BoxFit.cover, width: 40, height: 40)),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        blackHeadingSmall('Test '),
-                        greyTextSmall('It Manager @Nd Tech')
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const Divider(thickness: 1, color: backgroundColor),
-              Row(
-                children: [
-                  Row(children: const [
-                    Icon(Icons.star, color: Colors.orange, size: 14),
-                    Icon(Icons.star, color: Colors.orange, size: 14),
-                    Icon(Icons.star, color: Colors.orange, size: 14),
-                    Icon(Icons.star, color: Colors.orange, size: 14),
-                    Icon(Icons.star, color: Colors.grey, size: 14)
-                  ]),
-                  const SizedBox(width: 8),
-                  greyTextSmall('4.0 (1001 Reviews)'),
-                ],
-              ),
-              const SizedBox(height: 8),
-              greyTextSmall(
-                  'It is very good company for develop your project and It will deliver your project on time')
-            ],
-          )),
-    );
-  }
+  // Widget _buildTestimonial(context, e) {
+  //   return GestureDetector(
+  //     onTap: () {},
+  //     child: Container(
+  //         margin: const EdgeInsets.only(top: 16, bottom: 16, right: 12),
+  //         padding: const EdgeInsets.all(10),
+  //         width: 220,
+  //         height: 160,
+  //         clipBehavior: Clip.antiAlias,
+  //         decoration: const BoxDecoration(
+  //             color: Colors.white,
+  //             boxShadow: [
+  //               BoxShadow(
+  //                 offset: Offset(2, 2),
+  //                 blurRadius: 8,
+  //                 color: Color.fromRGBO(0, 0, 0, 0.16),
+  //               )
+  //             ],
+  //             borderRadius: BorderRadius.all(Radius.circular(6))),
+  //         child: Column(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: [
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Container(
+  //                     padding: const EdgeInsets.only(right: 10),
+  //                     child: Image.asset('lib/assets/images/p2.jpg',
+  //                         fit: BoxFit.cover, width: 40, height: 40)),
+  //                 Expanded(
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       blackHeadingSmall('Test '),
+  //                       greyTextSmall('It Manager @Nd Tech')
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //             const Divider(thickness: 1, color: backgroundColor),
+  //             Row(
+  //               children: [
+  //                 Row(children: const [
+  //                   Icon(Icons.star, color: Colors.orange, size: 14),
+  //                   Icon(Icons.star, color: Colors.orange, size: 14),
+  //                   Icon(Icons.star, color: Colors.orange, size: 14),
+  //                   Icon(Icons.star, color: Colors.orange, size: 14),
+  //                   Icon(Icons.star, color: Colors.grey, size: 14)
+  //                 ]),
+  //                 const SizedBox(width: 8),
+  //                 greyTextSmall('4.0 (1001 Reviews)'),
+  //               ],
+  //             ),
+  //             const SizedBox(height: 8),
+  //             greyTextSmall(
+  //                 'It is very good company for develop your project and It will deliver your project on time')
+  //           ],
+  //         )),
+  //   );
+  // }
 }
 
 class Item {
