@@ -10,6 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'controllers/company_controllers/company_controller.dart';
 import 'controllers/company_detail_by_com_id/company_detail_by_id_controller.dart';
 import 'controllers/employeee_controllersss/employee_dashboard_controller/employee_dashboardcontroller.dart';
+import 'controllers/employeee_controllersss/payment_get_controller/payment_get_controller.dart';
 import 'controllers/user_profile_controller/user_profile_controller.dart';
 import 'controllers/view_job_controller/job_controllersss.dart';
 import 'modules/splash_screen/splash_screen.dart';
@@ -22,6 +23,7 @@ void setupLazyLoading() {
   Get.lazyPut(() => CompanyDetailController());
   Get.lazyPut(() => AllcompanyController());
   Get.lazyPut(() => ProfileController());
+  Get.lazyPut(() => PaymentEmployeeController());
 }
 
 Future<void> main() async {

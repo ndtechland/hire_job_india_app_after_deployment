@@ -25,6 +25,7 @@ import '../models/employee_model/all_salary_slip_model.dart';
 import '../models/employee_model/apply_leave_model_dropdown.dart';
 import '../models/employee_model/dashboard_employee_model.dart';
 import '../models/employee_model/offer_appointment_latter_model.dart';
+import '../models/employee_model/payment_get_model/get_payment_model.dart';
 import '../models/employee_model/profile_model/bank_profile_details_employee.dart';
 import '../models/employee_model/profile_model/profile_basic_detail_model.dart';
 import '../models/employee_model/profile_model/profile_info_model_personal.dart';
@@ -1374,7 +1375,7 @@ class ApiProvider {
         print(url);
         //SupportModel supportModelFromJson
         SupportModel? getsupportmodel = supportModelFromJson(r.body);
-        print("profileinfobnk: ${getsupportmodel.response!.id}");
+        print("profilesupport: ${getsupportmodel.response!.id}");
         return getsupportmodel;
       } else {
         print('Failed to load profile information');
@@ -1934,6 +1935,41 @@ class ApiProvider {
       );
 
       return null;
+    }
+  }
+
+  ///payment get api......
+
+  static EmployeePaymentGetApi() async {
+    var prefs = GetStorage();
+    // Read saved user id and token
+    userId = prefs.read("Id").toString();
+    print('wwwuseridEE: $userId');
+
+    token = prefs.read("token").toString();
+    print('token: $token');
+    var url = '${baseUrl}EmployeeApi/GetJobamount';
+    //https://api.hirejobindia.com/api/EmployeeApi/GetJobamount
+    try {
+      // Add the token to the headers
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      };
+
+      http.Response r = await http.get(Uri.parse(url), headers: headers);
+      if (r.statusCode == 200) {
+        print("url");
+        print(url);
+        GetPaymentModel? geetemployepaymentmodel =
+            getPaymentModelFromJson(r.body);
+        print("profilepaymentinfo: ${geetemployepaymentmodel.data!.toInt()}");
+        return geetemployepaymentmodel;
+      } else {
+        print('Failed to load profile information');
+      }
+    } catch (error) {
+      print('profileedetaileror: $error');
     }
   }
 

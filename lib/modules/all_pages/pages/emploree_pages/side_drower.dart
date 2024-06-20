@@ -23,8 +23,10 @@ import '../../../../constants/static_text.dart';
 import '../../../../controllers/employee_controller/profile_controller/profile_info_employee_controller.dart';
 import '../../../../controllers/employeee_controllersss/employee_login_controllers/employee_login_controllers.dart';
 import '../../../../controllers/employeee_controllersss/employee_offer_appointment/offer_apt_employee_controller.dart';
+import '../../../../controllers/employeee_controllersss/payment_get_controller/payment_get_controller.dart';
 import '../../../../controllers/employeee_controllersss/salary_slip_controller/salary_slip_controllerss.dart';
 import '../../../../controllers/employeee_controllersss/support_comman/support_commannn.dart';
+import '../../../payments_pages/payment_get_page.dart';
 import '../view_pdf_only.dart';
 import 'change_password_employee.dart';
 import 'leaves_employee/multiple_day.dart';
@@ -41,6 +43,7 @@ class EmployeeNavBar extends StatelessWidget {
   ProfileEmployeeController _profileEmployeeController =
       Get.put(ProfileEmployeeController());
 
+  PaymentEmployeeController _employeeController = Get.find();
   EmployeeLoginController _employeeloginController =
       Get.put(EmployeeLoginController());
 
@@ -227,6 +230,17 @@ class EmployeeNavBar extends StatelessWidget {
                 showdilogleave(context);
                 // Navigator.push(context,
                 //     MaterialPageRoute(builder: (context) => Company()));
+              },
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.currency_rupee),
+              title: const Text('Do Your Payment'),
+              onTap: () async {
+                await _employeeController.paymentemployeeApi();
+                _employeeController.onInit();
+                await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => GetPaymentPage()));
               },
             ),
 

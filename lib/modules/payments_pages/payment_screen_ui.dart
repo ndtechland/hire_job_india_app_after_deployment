@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hirejobindia/modules/payments_pages/payment_page_1.dart';
 import 'package:url_launcher/url_launcher.dart';
-//import 'payment_service.dart'; // Ensure the path is correct
+
+import '../../controllers/employeee_controllersss/payment_get_controller/payment_get_controller.dart';
+
+final PaymentEmployeeController _paymentEmployeeController = Get.find();
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key});
+  const PaymentScreen({Key? key}) : super(key: key);
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -13,6 +17,7 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   final PaymentService _paymentService = PaymentService();
   bool _isLoading = true;
+  String? _error;
 
   @override
   void initState() {
@@ -22,16 +27,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Future<void> _initiatePayment() async {
     try {
+      final amount = _paymentEmployeeController.getPaymentModel?.data
+              ?.toInt()
+              .toString() ??
+          '0';
       final paymentUrl = await _paymentService.createPaymentRequest(
-        '1', // Amount in paise (INR)
-        'Product Info',
-        'John Doe',
-        'john.doe@example.com',
+        amount, // Amount in paise (INR)
+        'John Doe', // FirstName
+        'john.doe@example.com', // Email
+        '5465565765', // Phone
+        '7557', // ProductInfo
       );
-      _launchURL(paymentUrl);
+      await _launchURL(paymentUrl);
     } catch (e) {
-      // Handle error
-      print(e);
+      setState(() {
+        _error = 'Error: $e';
+      });
     } finally {
       setState(() {
         _isLoading = false;
@@ -43,7 +54,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      throw 'Could not launch $url';
+      setState(() {
+        _error = 'Could not launch $url';
+      });
     }
   }
 
@@ -56,7 +69,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
       body: Center(
         child: _isLoading
             ? CircularProgressIndicator()
-            : Text('Launching Payment URL...'),
+            : _error != null
+                ? Text(_error!)
+                : Text('Launching Payment URL...'),
       ),
     );
   }
