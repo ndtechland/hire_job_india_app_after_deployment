@@ -48,10 +48,10 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
                 bool success = await saveFile(widget.url, basename(widget.url));
                 if (success) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text(
                         'Successfully saved to internal storage "PDF_Download" folder',
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   );
@@ -62,10 +62,10 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
                   /// openPdf(widget.file.path);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text(
-                        'Failed to save the file',
-                        style: const TextStyle(color: Colors.white),
+                        "Already Downloaded!",
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   );

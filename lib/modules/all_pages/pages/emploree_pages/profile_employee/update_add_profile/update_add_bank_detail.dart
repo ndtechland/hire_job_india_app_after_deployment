@@ -7,8 +7,11 @@ import 'package:hirejobindia/components/styles.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../../../controllers/employee_controller/profile_controller/profile_info_employee_controller.dart';
+import '../../../../../../controllers/employeee_controllersss/employee_edit_profile_controller/employee_update_personal_controller.dart';
 import '../../../../../../controllers/employeee_controllersss/employee_edit_profile_controller/update_bank_employee.dart';
+import '../../../../../../controllers/employeee_controllersss/update_profile_image_controller/update_profile_image.dart';
 import '../../../../../../widget/elevated_button.dart';
+import '../profile_employee.dart';
 
 class BankDetailUpdateEmployeeProfile extends StatefulWidget {
   @override
@@ -23,6 +26,18 @@ class _BankDetailUpdateEmployeeProfileState
 
   final BankEmployeeUodateController _bankEmployeeUodateController =
       Get.put(BankEmployeeUodateController());
+
+  final EmployeeUpdatePersonalController _employeeUpdatePersonalController =
+      Get.put(EmployeeUpdatePersonalController());
+
+  ProfilePictureEmployeController _profilePictureEmployeController =
+      Get.put(ProfilePictureEmployeController());
+
+  ProfileEmployeeController _profileEmployeeController =
+      Get.put(ProfileEmployeeController());
+
+  final ProfileEmployeeController _getprofileepersonal =
+      Get.put(ProfileEmployeeController());
 
   final TextEditingController _acholdernameController = TextEditingController();
   final TextEditingController _bankController = TextEditingController();
@@ -158,6 +173,28 @@ class _BankDetailUpdateEmployeeProfileState
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             blackHeadingSmall('Bank Information'.toUpperCase()),
+                            GestureDetector(
+                                onTap: () async {
+                                  _profileEmployeeController
+                                      .profileemployeeApi();
+                                  _profileEmployeeController
+                                      .profileBasicemployeeApi();
+                                  _profileEmployeeController
+                                      .profileEmployeBankApi();
+
+                                  //profileBasicemployeeApi();
+                                  //     profileEmployeBankApi();
+
+                                  _profileEmployeeController.update();
+                                  // await _profileController.profileApi();
+                                  // _profileController.update();
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EmployeeProfile()));
+                                },
+                                child: appcolorText('view'))
                           ],
                         ),
                       ),
@@ -473,8 +510,8 @@ class _BankDetailUpdateEmployeeProfileState
                                                 BorderRadius.circular(10),
                                           ),
                                           child: ElevatedButton(
-                                            onPressed: () =>
-                                                _checkAndRequestPermissions(),
+                                            onPressed: () => _selectCVFile(),
+                                            // _checkAndRequestPermissions(),
                                             style: ElevatedButton.styleFrom(
                                               primary: appColor,
                                               onPrimary: Colors.white,

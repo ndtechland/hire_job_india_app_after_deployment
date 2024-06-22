@@ -6,15 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirejobindia/components/responsive_text.dart';
 import 'package:hirejobindia/components/styles.dart';
+import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/profile_employee/update_add_profile/update_add_profile_info.dart';
 import 'package:hirejobindia/modules/all_pages/pages/view_pdf_only.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../../controllers/employee_controller/profile_controller/profile_info_employee_controller.dart';
+import '../../../../../controllers/employeee_controllersss/employee_edit_profile_controller/employee_update_personal_controller.dart';
 
 class BankDetailEmployeeProfile extends StatelessWidget {
   final ProfileEmployeeController _getprofileebnk =
+      Get.put(ProfileEmployeeController());
+  final EmployeeUpdatePersonalController _employeeUpdatePersonalController =
+      Get.put(EmployeeUpdatePersonalController());
+  ProfileEmployeeController _profileEmployeeController =
       Get.put(ProfileEmployeeController());
 
   // static const String id = 'Profile';
@@ -58,9 +64,34 @@ class BankDetailEmployeeProfile extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           blackHeadingSmall('Bank Information'.toUpperCase()),
-                          // GestureDetector(
-                          //     onTap: () {}, child: appcolorText('Edit')
-                          // )
+                          GestureDetector(
+                              onTap: () async {
+                                _profileEmployeeController.profileemployeeApi();
+                                _profileEmployeeController
+                                    .profileBasicemployeeApi();
+                                _profileEmployeeController
+                                    .profileEmployeBankApi();
+
+                                // _getprofilee.profileApi();
+                                // Update UI after fetching profile information
+                                // _getprofilee.update();
+                                // _getprofilee.getprofileModel?.response?.id.toString();
+                                await _employeeUpdatePersonalController
+                                    .getStatepi();
+                                //_userProfileUodateController.onInit();
+                                _employeeUpdatePersonalController
+                                    .selectedState.value = null;
+
+                                _profileEmployeeController.update();
+                                // await _profileController.profileApi();
+                                // _profileController.update();
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            EmployeeUpdateProfile()));
+                              },
+                              child: appcolorText('Edit'))
                         ],
                       ),
                     ),

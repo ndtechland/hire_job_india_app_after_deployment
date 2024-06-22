@@ -12,6 +12,7 @@ import 'package:hirejobindia/models/applied_job_model.dart';
 import 'package:hirejobindia/modules/all_pages/pages/bookmark.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/static_text.dart';
@@ -41,6 +42,7 @@ import '../modules/all_pages/pages/home.dart';
 import '../modules/all_pages/pages/login.dart';
 
 var prefs = GetStorage();
+final box = GetStorage();
 
 final LoginController _loginController = Get.put(LoginController());
 
@@ -78,6 +80,91 @@ class ApiProvider {
   ///TODO: here we have to add different api in this page...........
   /// TODO: from here user 1 section...........
   ///
+  ///todo: payment api...
+  final String baseUrlll = 'https://api.hirejobindia.com/Pay';
+  final Logger _logger = Logger('PaymentService');
+
+  Future<String> createPaymentRequest(String amount, String firstName,
+      String email, String phone, String productInfo) async {
+    final Uri uri = _buildUri(amount, firstName, email, phone, productInfo);
+
+    // Retrieve token from GetStorage
+    final storage = GetStorage();
+    var token = storage.read("token");
+
+    if (token == null) {
+      throw Exception('Token not found in storage');
+    }
+    print("tokenpay${token}");
+
+    // Log the request URL for debugging
+    print('Request URL: $uri');
+
+    // Log the request URL for debugging
+    _logger.info('Request URL: $uri');
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token', // Include Bearer token in headers
+      },
+    );
+
+    // Log the response status and body for debugging
+    _logger.info('Response status: ${response.statusCode}');
+    _logger.info('Response body: ${response.body}');
+
+    // Log the response status and body for debugging
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    return _handleResponse(response);
+  }
+
+  Uri _buildUri(String amount, String firstName, String email, String phone,
+      String productInfo) {
+    return Uri.parse(baseUrlll).replace(queryParameters: {
+      'Amount': amount,
+      'FirstName': firstName,
+      'Email': email,
+      'Phone': phone,
+      'ProductInfo': productInfo,
+      'Surl': 'https://hirejobindia.com/PaymentResultsuccess/',
+      'Furl': 'https://hirejobindia.com/PaymentResultfail/',
+    });
+  }
+
+  String _handleResponse(http.Response response) {
+    if (response.statusCode == 200) {
+      if (response.body.isEmpty) {
+        throw EmptyResponseException('Response body is empty');
+      }
+      try {
+        final responseBody = json.decode(response.body);
+        if (responseBody.containsKey('payurl')) {
+          return responseBody['payurl'];
+        } else {
+          throw KeyNotFoundException('Key "payurl" not found in response');
+        }
+      } catch (e) {
+        throw JsonParsingException('Failed to parse response: $e');
+      }
+    } else {
+      if (response.body.isEmpty) {
+        throw EmptyResponseException('Error response body is empty');
+      }
+      try {
+        final responseBody = json.decode(response.body);
+        final errorMessage =
+            responseBody['error_message'] ?? 'Failed to create payment request';
+        throw PaymentRequestException(errorMessage);
+      } catch (e) {
+        throw JsonParsingException('Failed to create payment request: $e');
+      }
+    }
+  }
+
   //user signup..............
   static String apiUrl = "${baseUrl}Login/createProfile";
 
@@ -2366,3 +2453,23 @@ class ApiProvider {
 //     }
 //     return httpResponse;
 //   }
+
+class EmptyResponseException implements Exception {
+  final String message;
+  EmptyResponseException(this.message);
+}
+
+class KeyNotFoundException implements Exception {
+  final String message;
+  KeyNotFoundException(this.message);
+}
+
+class JsonParsingException implements Exception {
+  final String message;
+  JsonParsingException(this.message);
+}
+
+class PaymentRequestException implements Exception {
+  final String message;
+  PaymentRequestException(this.message);
+}

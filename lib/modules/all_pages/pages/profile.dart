@@ -13,11 +13,14 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../controllers/user_profile_controller/user_profile_controller.dart';
+import '../../../controllers/user_profile_update_controller/user_profile_update_controller.dart';
 import '../../../models/profile_model.dart';
 import 'home.dart';
 
 class Profile extends StatelessWidget {
   final ProfileController _getprofilee = Get.find();
+  UserProfileUodateController _userProfileUodateController =
+      Get.put(UserProfileUodateController());
 
   // static const String id = 'Profile';
 
@@ -56,13 +59,20 @@ class Profile extends StatelessWidget {
                         children: [
                           blackHeadingSmall('Basic Informations'.toUpperCase()),
                           GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 _getprofilee.profileApi();
                                 // Update UI after fetching profile information
                                 _getprofilee.update();
                                 _getprofilee.getprofileModel?.response?.id
                                     .toString();
-                                Get.to(EditProfile());
+                                await _userProfileUodateController.getStatepi();
+                                //_userProfileUodateController.onInit();
+                                _userProfileUodateController
+                                    .selectedState.value = null;
+                                // _userProfileUodateController
+                                //     .selectedCity.value = null;
+                                // await Future.delayed(Duration(milliseconds: 300));
+                                await Get.to(EditProfile());
                               },
                               child: appcolorText('Edit'))
                         ],
@@ -262,13 +272,20 @@ class Profile extends StatelessWidget {
                         children: [
                           blackHeadingSmall('Location'.toUpperCase()),
                           GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 _getprofilee.profileApi();
                                 // Update UI after fetching profile information
                                 _getprofilee.update();
                                 _getprofilee.getprofileModel?.response?.id
                                     .toString();
-                                Get.to(EditProfile());
+                                await _userProfileUodateController.getStatepi();
+                                //_userProfileUodateController.onInit();
+                                _userProfileUodateController
+                                    .selectedState.value = null;
+                                // _userProfileUodateController
+                                //     .selectedCity.value = null;
+                                // await Future.delayed(Duration(milliseconds: 300));
+                                await Get.to(EditProfile());
                               },
                               child: appcolorText('Edit'))
                         ],
@@ -532,13 +549,20 @@ class Profile extends StatelessWidget {
                         children: [
                           blackHeadingSmall('My Resume'.toUpperCase()),
                           GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 _getprofilee.profileApi();
                                 // Update UI after fetching profile information
                                 _getprofilee.update();
                                 _getprofilee.getprofileModel?.response?.id
                                     .toString();
-                                Get.to(EditProfile());
+                                await _userProfileUodateController.getStatepi();
+                                //_userProfileUodateController.onInit();
+                                _userProfileUodateController
+                                    .selectedState.value = null;
+                                // _userProfileUodateController
+                                //     .selectedCity.value = null;
+                                // await Future.delayed(Duration(milliseconds: 300));
+                                await Get.to(EditProfile());
                               },
                               child: appcolorText('Edit'))
                         ],
@@ -641,8 +665,7 @@ class Profile extends StatelessWidget {
                                       context: context,
                                       builder: (context) => AlertDialog(
                                         title: Text('Error'),
-                                        content:
-                                            Text('Failed to load PDF file.'),
+                                        content: Text('Already Downloaded.'),
                                         actions: [
                                           TextButton(
                                             onPressed: () =>
@@ -739,12 +762,18 @@ class Profile extends StatelessWidget {
                 ),
                 const SizedBox(width: 0),
                 IconButton(
-                    onPressed: () {
+                    onPressed: () async {
                       _getprofilee.profileApi();
                       // Update UI after fetching profile information
                       _getprofilee.update();
                       _getprofilee.getprofileModel?.response?.id.toString();
-                      Get.to(EditProfile());
+                      await _userProfileUodateController.getStatepi();
+                      //_userProfileUodateController.onInit();
+                      _userProfileUodateController.selectedState.value = null;
+                      // _userProfileUodateController
+                      //     .selectedCity.value = null;
+                      // await Future.delayed(Duration(milliseconds: 300));
+                      await Get.to(EditProfile());
                       // Navigator.pop(context);
                     },
                     icon: const Icon(Icons.edit, color: Colors.white)),

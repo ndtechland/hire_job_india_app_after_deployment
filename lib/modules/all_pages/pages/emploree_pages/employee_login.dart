@@ -5,7 +5,8 @@ import 'package:hirejobindia/components/styles.dart';
 import 'package:hirejobindia/widget/text_btn.dart';
 
 import '../../../../controllers/employeee_controllersss/employee_login_controllers/employee_login_controllers.dart';
-import '../../../../widget/employee_elevatedbutton.dart';
+import '../../../../widget/elevated_button.dart';
+import '../forgot_password.dart';
 
 class EmployeeLogin extends StatelessWidget {
   static const String id = 'Login';
@@ -85,6 +86,8 @@ class EmployeeLogin extends StatelessWidget {
                                           children: [
                                             MyTextButton(
                                               onPressed: () {
+                                                Get.to(ForgotPassword());
+
                                                 // Navigator.push(
                                                 //   context,
                                                 //   MaterialPageRoute(
@@ -102,7 +105,34 @@ class EmployeeLogin extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  MyElevatedButtonemployee(
+                                  // MyElevatedButtonemployee(
+                                  //   onPressed: () {
+                                  //     if (_employeeloginController
+                                  //             .loginFormKey2.currentState
+                                  //             ?.validate() ??
+                                  //         false) {
+                                  //       _employeeloginController
+                                  //           .checkemployeeLogin();
+                                  //
+                                  //       // Navigator.push(
+                                  //       //   context,
+                                  //       //   MaterialPageRoute(
+                                  //       //     builder: (context) => Home(),
+                                  //       //   ),
+                                  //       // );
+                                  //     }
+                                  //     // Navigator.push(
+                                  //     //   context,
+                                  //     //   MaterialPageRoute(
+                                  //     //     builder: (context) => Home(),
+                                  //     //   ),
+                                  //     // );
+                                  //   },
+                                  //   text: const Icon(Icons.arrow_forward),
+                                  //   height: 40,
+                                  //   width: 40,
+                                  // ),
+                                  MyElevatedButton(
                                     onPressed: () {
                                       if (_employeeloginController
                                               .loginFormKey2.currentState
@@ -125,9 +155,9 @@ class EmployeeLogin extends StatelessWidget {
                                       //   ),
                                       // );
                                     },
-                                    text: const Icon(Icons.arrow_forward),
+                                    text: Text('E-Login'),
                                     height: 40,
-                                    width: 40,
+                                    width: 200,
                                   ),
                                   const SizedBox(height: 34),
                                 ],

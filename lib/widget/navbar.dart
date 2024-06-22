@@ -51,9 +51,9 @@ class NavBar extends StatelessWidget {
             DrawerHeader(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: <Color>[logoColor, logoColor]),
+                    begin: Alignment.topCenter, end: Alignment.bottomCenter,
+                    //appColor2, appColor
+                    colors: <Color>[appColor2, appColor]),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),

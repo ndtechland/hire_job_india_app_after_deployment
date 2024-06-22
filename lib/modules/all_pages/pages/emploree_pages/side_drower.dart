@@ -21,6 +21,7 @@ import '../../../../constants/app_colorss/app_colorss.dart';
 import '../../../../constants/reusable_customdilog.dart';
 import '../../../../constants/static_text.dart';
 import '../../../../controllers/employee_controller/profile_controller/profile_info_employee_controller.dart';
+import '../../../../controllers/employeee_controllersss/employee_edit_profile_controller/employee_update_personal_controller.dart';
 import '../../../../controllers/employeee_controllersss/employee_login_controllers/employee_login_controllers.dart';
 import '../../../../controllers/employeee_controllersss/employee_offer_appointment/offer_apt_employee_controller.dart';
 import '../../../../controllers/employeee_controllersss/payment_get_controller/payment_get_controller.dart';
@@ -52,6 +53,8 @@ class EmployeeNavBar extends StatelessWidget {
 
   SupportEmployeeController _supportEmployeeController =
       Get.put(SupportEmployeeController());
+  final EmployeeUpdatePersonalController _employeeUpdatePersonalController =
+      Get.put(EmployeeUpdatePersonalController());
 
   //AllSavedJobController _savedJobController = Get.put(AllSavedJobController());
   // AllAppliedJobController _allappliedController =
@@ -185,6 +188,7 @@ class EmployeeNavBar extends StatelessWidget {
                 //     profileEmployeBankApi();
 
                 _profileEmployeeController.update();
+
                 // await _profileController.profileApi();
                 // _profileController.update();
                 await Navigator.push(context,
@@ -196,9 +200,21 @@ class EmployeeNavBar extends StatelessWidget {
               leading: const Icon(Icons.edit_outlined),
               title: const Text('Add/Update Profile'),
               onTap: () async {
-                await _profileEmployeeController.profileemployeeApi();
-                await _profileEmployeeController.profileBasicemployeeApi();
-                await _profileEmployeeController.profileEmployeBankApi();
+                _profileEmployeeController.profileemployeeApi();
+                _profileEmployeeController.profileBasicemployeeApi();
+                _profileEmployeeController.profileEmployeBankApi();
+
+                // _getprofilee.profileApi();
+                // Update UI after fetching profile information
+                // _getprofilee.update();
+                // _getprofilee.getprofileModel?.response?.id.toString();
+                await _employeeUpdatePersonalController.getStatepi();
+                //_userProfileUodateController.onInit();
+                _employeeUpdatePersonalController.selectedState.value = null;
+                // _userProfileUodateController
+                //     .selectedCity.value = null;
+                // await Future.delayed(Duration(milliseconds: 300));
+                // await Get.to(EditProfile());
 
                 //profileBasicemployeeApi();
                 //     profileEmployeBankApi();

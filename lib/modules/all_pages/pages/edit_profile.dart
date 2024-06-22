@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:hirejobindia/components/styles.dart';
+import 'package:hirejobindia/modules/all_pages/pages/profile.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -28,6 +29,7 @@ class _EditProfileState extends State<EditProfile> {
 
   UserProfileUodateController _userProfileUodateController =
       Get.put(UserProfileUodateController());
+  final ProfileController _profileController = Get.find();
 
   final TextEditingController _nameController = TextEditingController(
       // text: _getprofilee.getprofileModel.response.fullName
@@ -103,18 +105,65 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  Future<void> _checkAndRequestPermissions(context) async {
+  Future<void> _checkAndRequestPermissions(BuildContext context) async {
+    // Check if storage permission is granted
     if (await Permission.storage.request().isGranted) {
+      // Permission is already granted, proceed with file selection
       _selectCVFile(context);
     } else {
-      await Permission.storage.request();
-      if (await Permission.storage.isGranted) {
+      // Permission is not granted, request it
+      var status = await Permission.storage.request();
+      if (status.isGranted) {
+        // Permission granted, proceed with file selection
         _selectCVFile(context);
+      } else if (status.isDenied) {
+        // Permission denied with 'never ask again' enabled, open app settings
+        print('Permission denied with never ask again');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('Permissions Required'),
+            content: Text(
+                'Please grant storage permission in app settings to continue using this feature.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  openAppSettings(); // Opens app settings page
+                },
+              ),
+            ],
+          ),
+        );
       } else {
-        print('Storage permission is required to access files.');
+        // Permission denied, show a message
+        print('Permission denied');
+        Fluttertoast.showToast(
+          msg: "Storage permission is required to access files.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }
     }
   }
+
+  // Future<void> _checkAndRequestPermissions(context) async {
+  //   if (await Permission.storage.request().isGranted) {
+  //     _selectCVFile(context);
+  //   } else {
+  //     await Permission.storage.request();
+  //     if (await Permission.storage.isGranted) {
+  //       _selectCVFile(context);
+  //     } else {
+  //       print('Storage permission is required to access files.');
+  //     }
+  //   }
+  // }
 
   Future<void> _selectCVFile(BuildContext context) async {
     try {
@@ -154,18 +203,65 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  Future<void> _checkAndRequestPermissions2(context) async {
+  Future<void> _checkAndRequestPermissions2(BuildContext context) async {
+    // Check if storage permission is granted
     if (await Permission.storage.request().isGranted) {
+      // Permission is already granted, proceed with file selection
       _selectCVFile2(context);
     } else {
-      await Permission.storage.request();
-      if (await Permission.storage.isGranted) {
+      // Permission is not granted, request it
+      var status = await Permission.storage.request();
+      if (status.isGranted) {
+        // Permission granted, proceed with file selection
         _selectCVFile2(context);
+      } else if (status.isDenied) {
+        // Permission denied with 'never ask again' enabled, open app settings
+        print('Permission denied with never ask again');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('Permissions Required'),
+            content: Text(
+                'Please grant storage permission in app settings to continue using this feature.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  openAppSettings(); // Opens app settings page
+                },
+              ),
+            ],
+          ),
+        );
       } else {
-        print('Storage permission is required to access files.');
+        // Permission denied, show a message
+        print('Permission denied');
+        Fluttertoast.showToast(
+          msg: "Storage permission is required to access files.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }
     }
   }
+
+  // Future<void> _checkAndRequestPermissions2(context) async {
+  //   if (await Permission.storage.request().isGranted) {
+  //     _selectCVFile2(context);
+  //   } else {
+  //     await Permission.storage.request();
+  //     if (await Permission.storage.isGranted) {
+  //       _selectCVFile2(context);
+  //     } else {
+  //       print('Storage permission is required to access files.');
+  //     }
+  //   }
+  // }
 
   Future<void> _selectCVFile2(BuildContext context) async {
     try {
@@ -273,7 +369,15 @@ class _EditProfileState extends State<EditProfile> {
                             blackHeadingSmall(
                                 'Basic Informations'.toUpperCase()),
                             GestureDetector(
-                                onTap: () {}, child: appcolorText('View'))
+                                onTap: () async {
+                                  await _profileController.profileApi();
+                                  _profileController.update();
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Profile()));
+                                },
+                                child: appcolorText('View'))
                           ],
                         ),
                       ),
@@ -452,7 +556,15 @@ class _EditProfileState extends State<EditProfile> {
                           children: [
                             blackHeadingSmall('Location'.toUpperCase()),
                             GestureDetector(
-                                onTap: () {}, child: appcolorText('View'))
+                                onTap: () async {
+                                  await _profileController.profileApi();
+                                  _profileController.update();
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Profile()));
+                                },
+                                child: appcolorText('View'))
                           ],
                         ),
                       ),
@@ -641,7 +753,15 @@ class _EditProfileState extends State<EditProfile> {
                           children: [
                             blackHeadingSmall('Others'.toUpperCase()),
                             GestureDetector(
-                                onTap: () {}, child: appcolorText('View'))
+                                onTap: () async {
+                                  await _profileController.profileApi();
+                                  _profileController.update();
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Profile()));
+                                },
+                                child: appcolorText('View'))
                           ],
                         ),
                       ),
@@ -806,7 +926,15 @@ class _EditProfileState extends State<EditProfile> {
                           children: [
                             blackHeadingSmall('My Resume'.toUpperCase()),
                             GestureDetector(
-                                onTap: () {}, child: appcolorText('View'))
+                                onTap: () async {
+                                  await _profileController.profileApi();
+                                  _profileController.update();
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Profile()));
+                                },
+                                child: appcolorText('View'))
                           ],
                         ),
                       ),
@@ -842,8 +970,9 @@ class _EditProfileState extends State<EditProfile> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: ElevatedButton(
-                                onPressed: () => _checkAndRequestPermissions(
-                                    context), // Use a lambda function
+                                onPressed: () => _selectCVFile(context),
+                                // _checkAndRequestPermissions(
+                                // context), // Use a lambda function
                                 style: ElevatedButton.styleFrom(
                                   primary: appColor, // Button color
                                   onPrimary: Colors.white, // Text color
@@ -874,7 +1003,15 @@ class _EditProfileState extends State<EditProfile> {
                           children: [
                             blackHeadingSmall('Profile Image'.toUpperCase()),
                             GestureDetector(
-                                onTap: () {}, child: appcolorText('View'))
+                                onTap: () async {
+                                  await _profileController.profileApi();
+                                  _profileController.update();
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Profile()));
+                                },
+                                child: appcolorText('View'))
                           ],
                         ),
                       ),
@@ -910,8 +1047,9 @@ class _EditProfileState extends State<EditProfile> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: ElevatedButton(
-                                onPressed: () => _checkAndRequestPermissions2(
-                                    context), // Use a lambda function
+                                onPressed: () => _selectCVFile2(context),
+                                // _checkAndRequestPermissions2(
+                                // context), // Use a lambda function
                                 style: ElevatedButton.styleFrom(
                                   primary: appColor, // Button color
                                   onPrimary: Colors.white, // Text color

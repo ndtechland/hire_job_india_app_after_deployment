@@ -86,7 +86,7 @@ class _GetPaymentPageState extends State<GetPaymentPage> {
                                             responsiveText(
                                               context: context,
                                               text:
-                                                  "${FixedText.symbol}${_paymentEmployeeController.getPaymentModel?.data?.toInt() ?? '00'}00000",
+                                                  "${FixedText.symbol}${_paymentEmployeeController.getPaymentModel?.data?.toInt() ?? '00'}",
                                               fontSizePortrait: 15,
                                               fontSizeLandscape: 15,
                                               color: logoColor,

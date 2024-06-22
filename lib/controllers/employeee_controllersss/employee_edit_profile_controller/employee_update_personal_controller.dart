@@ -24,7 +24,7 @@ class EmployeeUpdatePersonalController extends GetxController {
   Rx<StateModelss?> selectedState = (null as StateModelss?).obs;
   List<StateModelss> states = <StateModelss>[].obs;
 
-  void getStatepi() async {
+  Future<void> getStatepi() async {
     states = await ApiProvider.getSatesApi();
   }
 

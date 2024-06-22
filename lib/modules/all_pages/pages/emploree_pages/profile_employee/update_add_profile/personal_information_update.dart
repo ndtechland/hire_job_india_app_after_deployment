@@ -18,6 +18,7 @@ import '../../../../../../controllers/employeee_controllersss/update_profile_ima
 import '../../../../../../models/city_model.dart';
 import '../../../../../../models/state_model.dart';
 import '../../../../../../widget/elevated_button.dart';
+import '../profile_employee.dart';
 
 //enum Gender { male, female, other }
 
@@ -35,6 +36,9 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
 
   ProfilePictureEmployeController _profilePictureEmployeController =
       Get.put(ProfilePictureEmployeController());
+
+  ProfileEmployeeController _profileEmployeeController =
+      Get.put(ProfileEmployeeController());
 
   final ProfileEmployeeController _getprofileepersonal =
       Get.put(ProfileEmployeeController());
@@ -375,7 +379,27 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                             blackHeadingSmall(
                                 'Basic Informations'.toUpperCase()),
                             GestureDetector(
-                                onTap: () {}, child: appcolorText('View'))
+                                onTap: () async {
+                                  _profileEmployeeController
+                                      .profileemployeeApi();
+                                  _profileEmployeeController
+                                      .profileBasicemployeeApi();
+                                  _profileEmployeeController
+                                      .profileEmployeBankApi();
+
+                                  //profileBasicemployeeApi();
+                                  //     profileEmployeBankApi();
+
+                                  _profileEmployeeController.update();
+                                  // await _profileController.profileApi();
+                                  // _profileController.update();
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EmployeeProfile()));
+                                },
+                                child: appcolorText('View'))
                           ],
                         ),
                       ),
@@ -564,7 +588,27 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                           children: [
                             blackHeadingSmall('Location'.toUpperCase()),
                             GestureDetector(
-                                onTap: () {}, child: appcolorText('View'))
+                                onTap: () async {
+                                  _profileEmployeeController
+                                      .profileemployeeApi();
+                                  _profileEmployeeController
+                                      .profileBasicemployeeApi();
+                                  _profileEmployeeController
+                                      .profileEmployeBankApi();
+
+                                  //profileBasicemployeeApi();
+                                  //     profileEmployeBankApi();
+
+                                  _profileEmployeeController.update();
+                                  // await _profileController.profileApi();
+                                  // _profileController.update();
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EmployeeProfile()));
+                                },
+                                child: appcolorText('View'))
                           ],
                         ),
                       ),
@@ -799,7 +843,27 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                           children: [
                             blackHeadingSmall('Documents'.toUpperCase()),
                             GestureDetector(
-                                onTap: () {}, child: appcolorText('View'))
+                                onTap: () async {
+                                  _profileEmployeeController
+                                      .profileemployeeApi();
+                                  _profileEmployeeController
+                                      .profileBasicemployeeApi();
+                                  _profileEmployeeController
+                                      .profileEmployeBankApi();
+
+                                  //profileBasicemployeeApi();
+                                  //     profileEmployeBankApi();
+
+                                  _profileEmployeeController.update();
+                                  // await _profileController.profileApi();
+                                  // _profileController.update();
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EmployeeProfile()));
+                                },
+                                child: appcolorText('View'))
                           ],
                         ),
                       ),
@@ -926,8 +990,9 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                     ),
                                     child: ElevatedButton(
                                       onPressed: () =>
-                                          _checkAndRequestPermissions(
-                                              context), // Use a lambda function
+                                          _selectaadhaarFile(context),
+                                      // _checkAndRequestPermissions(
+                                      //     context), // Use a lambda function
                                       style: ElevatedButton.styleFrom(
                                         primary: appColor, // Button color
                                         onPrimary: Colors.white, // Text color
@@ -979,9 +1044,9 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: ElevatedButton(
-                                      onPressed: () =>
-                                          _checkAndRequestPermissions2(
-                                              context), // Use a lambda function
+                                      onPressed: () => _selectPanFile(context),
+                                      // _checkAndRequestPermissions2(
+                                      //     context), // Use a lambda function
                                       style: ElevatedButton.styleFrom(
                                         primary: appColor, // Button color
                                         onPrimary: Colors.white, // Text color
@@ -1034,8 +1099,10 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                     ),
                                     child: ElevatedButton(
                                       onPressed: () =>
-                                          _checkAndRequestPermissions3(
-                                              context), // Use a lambda function
+                                          _selectimageprofileFile(context),
+
+                                      // _checkAndRequestPermissions3(
+                                      //       context), // Use a lambda function
                                       style: ElevatedButton.styleFrom(
                                         primary: appColor, // Button color
                                         onPrimary: Colors.white, // Text color

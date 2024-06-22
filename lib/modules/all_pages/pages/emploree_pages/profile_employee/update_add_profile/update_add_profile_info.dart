@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hirejobindia/components/styles.dart';
 import 'package:hirejobindia/constants/app_colorss/app_colorss.dart';
-import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/profile_employee/basic_info_profile.dart';
 import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/profile_employee/update_add_profile/personal_information_update.dart';
 import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/profile_employee/update_add_profile/update_add_bank_detail.dart';
 
@@ -31,7 +30,7 @@ class EmployeeUpdateProfile extends StatelessWidget {
         return false;
       },
       child: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           backgroundColor: AppColors.th1whtbackgrd,
           appBar: AppBar(
@@ -89,19 +88,19 @@ class EmployeeUpdateProfile extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Tab(
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 40, // Adjust the height for unselected tabs
-                          child: Text(
-                            'Basic',
-                            style: GoogleFonts.nunitoSans(
-                              fontSize: size.height * 0.019,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Tab(
+                      //   child: Container(
+                      //     alignment: Alignment.center,
+                      //     height: 40, // Adjust the height for unselected tabs
+                      //     child: Text(
+                      //       'Basic',
+                      //       style: GoogleFonts.nunitoSans(
+                      //         fontSize: size.height * 0.019,
+                      //         fontWeight: FontWeight.w600,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Tab(
                         child: Container(
                           alignment: Alignment.center,
@@ -141,7 +140,7 @@ class EmployeeUpdateProfile extends StatelessWidget {
                     // monthly_sales(
                     //   isShowingMainData: true,
                     // ),
-                    BasicEmployeeProfile(),
+                    ///BasicEmployeeProfile(),
 
                     BankDetailUpdateEmployeeProfile(),
 

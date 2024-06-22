@@ -6,7 +6,6 @@ import 'package:hirejobindia/modules/all_pages/pages/registration_test.dart';
 import 'package:hirejobindia/widget/elevated_button.dart';
 import 'package:hirejobindia/widget/text_btn.dart';
 
-import '../../../components/responsive_text.dart';
 import '../../../controllers/employeee_controllersss/employee_login_controllers/employee_login_controllers.dart';
 import '../../../controllers/login_controllers/login_controllersss.dart';
 import '../../../controllers/registrationss/registration_controller.dart';
@@ -111,40 +110,41 @@ class _LoginState extends State<Login> {
                         ),
                       ),
               ),
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(
-                    MediaQuery.of(context).size.width >
-                            MediaQuery.of(context).size.height
-                        ? MediaQuery.of(context).size.height *
-                            0.35 // Landscape mode
-                        : MediaQuery.of(context).size.height *
-                            0.2), // Portrait mode
-                child: AppBar(
-                  automaticallyImplyLeading: false,
-                  backgroundColor: logoColor,
-                  flexibleSpace: responsiveContainer(
-                    heightLandscape: size.height * 0.49,
-                    heightPortrait: size.height * 0.29,
-                    color: logoColor,
-                    context: context,
-                    child: Padding(
-                      padding: const EdgeInsets.all(9.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          logoImg(),
-                          responsiveText(
-                              text: 'Login With US!',
-                              fontSizeLandscape: 19,
-                              fontSizePortrait: 20,
-                              color: Colors.white,
-                              context: context),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              appBar: _buildAppBar(),
+              // PreferredSize(
+              //   preferredSize: Size.fromHeight(
+              //       MediaQuery.of(context).size.width >
+              //               MediaQuery.of(context).size.height
+              //           ? MediaQuery.of(context).size.height *
+              //               0.35 // Landscape mode
+              //           : MediaQuery.of(context).size.height *
+              //               0.2), // Portrait mode
+              //   child: AppBar(
+              //     automaticallyImplyLeading: false,
+              //     backgroundColor: logoColor,
+              //     flexibleSpace: responsiveContainer(
+              //       heightLandscape: size.height * 0.49,
+              //       heightPortrait: size.height * 0.29,
+              //       color: logoColor,
+              //       context: context,
+              //       child: Padding(
+              //         padding: const EdgeInsets.all(9.0),
+              //         child: Column(
+              //           mainAxisAlignment: MainAxisAlignment.end,
+              //           children: [
+              //             logoImg(),
+              //             responsiveText(
+              //                 text: 'Login With US!',
+              //                 fontSizeLandscape: 19,
+              //                 fontSizePortrait: 20,
+              //                 color: Colors.white,
+              //                 context: context),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
             );
           },
         );
@@ -316,6 +316,58 @@ class _LoginState extends State<Login> {
               ),
       ),
     );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return PreferredSize(
+      preferredSize: Size.fromHeight(150),
+      child: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        flexibleSpace: _buildHeader(),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+        width: double.infinity,
+        height: 200,
+        //MediaQuery.of(context).size.height * 0.35,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            appColor2,
+            appColor,
+            //appColor
+          ],
+        )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Spacer(),
+            // SizedBox(
+            //   height: 15,
+            // ),
+            logoImg(),
+            const Text(
+              'Welcome to Hire Job India',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 16, fontFamily: 'medium'),
+            ),
+            Text(
+              'Login With Us.'.toUpperCase(),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'medium'),
+            ),
+          ],
+        ));
   }
 
   logoImg() {

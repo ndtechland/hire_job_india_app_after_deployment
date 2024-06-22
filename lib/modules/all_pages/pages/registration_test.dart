@@ -26,42 +26,87 @@ class RegistrationPage extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController(
       //  text: "kptt1"
       );
+
   final TextEditingController _emailController = TextEditingController(
       //text: "kpw5@gmail.com"
       );
+
   final TextEditingController _passwordController = TextEditingController(
       //text: "12345"
       );
+
   final TextEditingController _mobileNumberController = TextEditingController(
       // text: "0444333333"
       );
+
   final TextEditingController _experienceController = TextEditingController(
       //  text: "22"
       );
+
   final TextEditingController _stateIdController = TextEditingController();
+
   final TextEditingController _cityIdController = TextEditingController();
+
   final TextEditingController _genderNameController = TextEditingController();
+
   final TextEditingController _dateOfBirthController = TextEditingController();
+
   final TextEditingController _addressController = TextEditingController(
       //text: "delllhhiii"
       );
+
   final TextEditingController _pincodeController = TextEditingController(
       //text: "343322"
       );
+
   final TextEditingController _cvFilePathController = TextEditingController();
 
   Uint8List? _cvFileContent;
+
   Gender? _selectedGender = Gender.male;
 
-  Future<void> _checkAndRequestPermissions(context) async {
+  Future<void> _checkAndRequestPermissions(BuildContext context) async {
+    // Check if storage permission is granted
     if (await Permission.storage.request().isGranted) {
+      // Permission is already granted, proceed with file selection
       _selectCVFile(context);
     } else {
-      await Permission.storage.request();
-      if (await Permission.storage.isGranted) {
+      // Permission is not granted, request it
+      var status = await Permission.storage.request();
+      if (status.isGranted) {
+        // Permission granted, proceed with file selection
         _selectCVFile(context);
+      } else if (status.isPermanentlyDenied) {
+        // Permission denied with 'never ask again' enabled, show rationale
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('Permissions Required'),
+            content: Text(
+              'Please grant storage permission in app settings to continue using this feature.',
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  openAppSettings(); // Opens app settings page
+                },
+              ),
+            ],
+          ),
+        );
       } else {
-        print('Storage permission is required to access files.');
+        // Permission denied, show a message
+        Fluttertoast.showToast(
+          msg: "Storage permission is required to access files.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }
     }
   }
@@ -158,11 +203,12 @@ class RegistrationPage extends StatelessWidget {
                         key: _profileController.signupFormKey,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Padding(
-                          padding: const EdgeInsets.all(2.0),
+                          padding: const EdgeInsets.all(0.0),
                           child: SingleChildScrollView(
                             child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 0.1, vertical: 8),
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.03,
+                                  vertical: size.height * 0.02),
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(20),
@@ -477,10 +523,10 @@ class RegistrationPage extends StatelessWidget {
                                             child: Obx(
                                               () => RadioListTile(
                                                 title: Text(
-                                                  'Male',
+                                                  'M',
                                                   style: TextStyle(
                                                     fontSize:
-                                                        size.height * 0.014,
+                                                        size.height * 0.016,
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
@@ -511,10 +557,10 @@ class RegistrationPage extends StatelessWidget {
                                             child: Obx(
                                               () => RadioListTile(
                                                 title: Text(
-                                                  'Female',
+                                                  'F',
                                                   style: TextStyle(
                                                     fontSize:
-                                                        size.height * 0.014,
+                                                        size.height * 0.016,
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
@@ -544,10 +590,10 @@ class RegistrationPage extends StatelessWidget {
                                             child: Obx(
                                               () => RadioListTile(
                                                 title: Text(
-                                                  'Other',
+                                                  'O',
                                                   style: TextStyle(
                                                     fontSize:
-                                                        size.height * 0.014,
+                                                        size.height * 0.016,
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
@@ -704,8 +750,9 @@ class RegistrationPage extends StatelessWidget {
                                           ),
                                           child: ElevatedButton(
                                             onPressed: () =>
-                                                _checkAndRequestPermissions(
-                                                    context), // Use a lambda function
+                                                _selectCVFile(context),
+                                            // _checkAndRequestPermissions(
+                                            //     context), // Use a lambda function
                                             style: ElevatedButton.styleFrom(
                                               primary: appColor, // Button color
                                               onPrimary:
@@ -727,64 +774,115 @@ class RegistrationPage extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 40),
+                                    SizedBox(height: 20),
 
                                     MyElevatedButton(
-                                        onPressed: () async {
-                                          if (_profileController
-                                                  .signupFormKey.currentState
-                                                  ?.validate() ??
-                                              false) {
-                                            if (_cvFileContent != null) {
-                                              _profileController.createProfile(
-                                                fullName: _nameController.text,
-                                                emailID: _emailController.text,
-                                                password:
-                                                    _passwordController.text,
-                                                mobileNumber:
-                                                    _mobileNumberController
-                                                        .text,
-                                                experience:
-                                                    _experienceController.text,
-                                                stateId: _profileController
-                                                    .selectedState.value!.id
-                                                    .toString(),
-                                                cityId: _profileController
-                                                    .selectedCity.value!.id
-                                                    .toString(),
-                                                genderName: _profileController
-                                                    .selectedGender.value,
-                                                dateOfBirth:
-                                                    _dateOfBirthController.text,
-                                                address:
-                                                    _addressController.text,
-                                                pincode:
-                                                    _pincodeController.text,
-                                                cvFileContent:
-                                                    _cvFileContent!, // Pass file content
-                                                cvFileName:
-                                                    _cvFilePathController
-                                                        .text, // Pass file name
-                                              );
-                                              // await Future.delayed(Duration(seconds: 3));
+                                      onPressed: () async {
+                                        if (_profileController
+                                                .signupFormKey.currentState
+                                                ?.validate() ??
+                                            false) {
+                                          if (_cvFileContent != null) {
+                                            _profileController.createProfile(
+                                              fullName: _nameController.text,
+                                              emailID: _emailController.text,
+                                              password:
+                                                  _passwordController.text,
+                                              mobileNumber:
+                                                  _mobileNumberController.text,
+                                              experience:
+                                                  _experienceController.text,
+                                              stateId: _profileController
+                                                  .selectedState.value!.id
+                                                  .toString(),
+                                              cityId: _profileController
+                                                  .selectedCity.value!.id
+                                                  .toString(),
+                                              genderName: _profileController
+                                                  .selectedGender.value,
+                                              dateOfBirth:
+                                                  _dateOfBirthController.text,
+                                              address: _addressController.text,
+                                              pincode: _pincodeController.text,
+                                              cvFileContent:
+                                                  _cvFileContent!, // Pass file content
+                                              cvFileName: _cvFilePathController
+                                                  .text, // Pass file name
+                                            );
+                                            // await Future.delayed(Duration(seconds: 3));
 
-                                              ///Clear dropdown value
-                                              //_profileController.selectedState.value = null;
-                                              // _profileController.selectedCity.value = null;
-                                            } else {
-                                              print('Please select a CV file');
-                                            }
+                                            ///Clear dropdown value
+                                            //_profileController.selectedState.value = null;
+                                            // _profileController.selectedCity.value = null;
+                                          } else {
+                                            print('Please select a CV file');
                                           }
+                                        }
 
-                                          // Navigator.push(
-                                          //     context, MaterialPageRoute(builder: (context) => Home()));
-                                        },
-                                        text: const Icon(Icons.arrow_forward),
-                                        height: 40,
-                                        width: 40),
+                                        // Navigator.push(
+                                        //     context, MaterialPageRoute(builder: (context) => Home()));
+                                      },
+                                      text: Text('SignUp'),
+                                      height: 40,
+                                      width: 200,
+                                    ),
+
+                                    // MyElevatedButton(
+                                    //     onPressed: () async {
+                                    //       if (_profileController
+                                    //               .signupFormKey.currentState
+                                    //               ?.validate() ??
+                                    //           false) {
+                                    //         if (_cvFileContent != null) {
+                                    //           _profileController.createProfile(
+                                    //             fullName: _nameController.text,
+                                    //             emailID: _emailController.text,
+                                    //             password:
+                                    //                 _passwordController.text,
+                                    //             mobileNumber:
+                                    //                 _mobileNumberController
+                                    //                     .text,
+                                    //             experience:
+                                    //                 _experienceController.text,
+                                    //             stateId: _profileController
+                                    //                 .selectedState.value!.id
+                                    //                 .toString(),
+                                    //             cityId: _profileController
+                                    //                 .selectedCity.value!.id
+                                    //                 .toString(),
+                                    //             genderName: _profileController
+                                    //                 .selectedGender.value,
+                                    //             dateOfBirth:
+                                    //                 _dateOfBirthController.text,
+                                    //             address:
+                                    //                 _addressController.text,
+                                    //             pincode:
+                                    //                 _pincodeController.text,
+                                    //             cvFileContent:
+                                    //                 _cvFileContent!, // Pass file content
+                                    //             cvFileName:
+                                    //                 _cvFilePathController
+                                    //                     .text, // Pass file name
+                                    //           );
+                                    //           // await Future.delayed(Duration(seconds: 3));
+                                    //
+                                    //           ///Clear dropdown value
+                                    //           //_profileController.selectedState.value = null;
+                                    //           // _profileController.selectedCity.value = null;
+                                    //         } else {
+                                    //           print('Please select a CV file');
+                                    //         }
+                                    //       }
+                                    //
+                                    //       // Navigator.push(
+                                    //       //     context, MaterialPageRoute(builder: (context) => Home()));
+                                    //     },
+                                    //     text: const Icon(Icons.arrow_forward),
+                                    //     height: 40,
+                                    //     width: 40),
                                     Container(
-                                      padding: const EdgeInsets.all(24),
-                                      height: 100,
+                                      padding: EdgeInsets.all(8),
+                                      height: 50,
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
@@ -857,8 +955,9 @@ class RegistrationPage extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            appColor,
             appColor2,
+            appColor,
+            //appColor
           ],
         )),
         child: Column(
@@ -874,9 +973,9 @@ class RegistrationPage extends StatelessWidget {
                   color: Colors.white, fontSize: 16, fontFamily: 'medium'),
             ),
             Text(
-              'SIGNUP With US.',
+              'SIGNUP With US.'.toUpperCase(),
               style: TextStyle(
-                  color: Colors.indigo.shade900,
+                  color: Colors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'medium'),
