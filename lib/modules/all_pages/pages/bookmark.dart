@@ -257,9 +257,9 @@ class Bookmark extends StatelessWidget {
                                                           const EdgeInsets.only(
                                                               right: 10),
                                                       height: textfieldHeight *
-                                                          0.26,
+                                                          0.25,
                                                       width:
-                                                          textfieldWidth * 0.19,
+                                                          textfieldWidth * 0.23,
                                                       child: ClipOval(
                                                         clipBehavior: Clip.none,
                                                         child: Image.network(
@@ -269,7 +269,7 @@ class Bookmark extends StatelessWidget {
                                                                           index]
                                                                       .companyImage ??
                                                                   ""),
-                                                          fit: BoxFit.fill,
+                                                          fit: BoxFit.contain,
                                                           errorBuilder:
                                                               (context, error,
                                                                   stackTrace) {

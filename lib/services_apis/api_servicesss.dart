@@ -130,8 +130,8 @@ class ApiProvider {
       'Email': email,
       'Phone': phone,
       'ProductInfo': productInfo,
-      'Surl': 'https://hirejobindia.com/PaymentResultsuccess/',
-      'Furl': 'https://hirejobindia.com/PaymentResultfail/',
+      'Surl': 'https://api.hirejobindia.com/PaymentResultsuccess',
+      'Furl': 'https://api.hirejobindia.com/PaymentResultfail',
     });
   }
 
@@ -837,7 +837,7 @@ class ApiProvider {
     if (r.statusCode == 200) {
       Get.snackbar(
         'Success',
-        "Job Apply Successfully",
+        r.body,
         backgroundColor:
             Colors.green.shade300, // Set the background color to green
         snackPosition: SnackPosition.TOP, // Set the position of the snackbar
@@ -859,15 +859,14 @@ class ApiProvider {
       );
     } else {
       Get.snackbar(
-        'Error',
+        'Message',
         r.body,
-        backgroundColor: Colors.red, // Set the background color to green
+        backgroundColor: Colors.grey, // Set the background color to green
         snackPosition: SnackPosition.TOP, // Set the position of the snackbar
         duration: Duration(
             seconds: 2), // Set the duration of the snackbar to 2 seconds
       );
     }
-
     return r;
   }
 
@@ -897,7 +896,8 @@ class ApiProvider {
     if (r.statusCode == 200) {
       Get.snackbar(
         'Success',
-        "Job Saved Successfully",
+        r.body,
+        //"Job Saved Successfully",
         backgroundColor:
             Colors.green.shade300, // Set the background color to green
         snackPosition: SnackPosition.TOP, // Set the position of the snackbar
@@ -919,9 +919,9 @@ class ApiProvider {
       );
     } else {
       Get.snackbar(
-        'Error',
+        'Message',
         r.body,
-        backgroundColor: Colors.red, // Set the background color to green
+        backgroundColor: Colors.grey, // Set the background color to green
         snackPosition: SnackPosition.TOP, // Set the position of the snackbar
         duration: Duration(
             seconds: 2), // Set the duration of the snackbar to 2 seconds

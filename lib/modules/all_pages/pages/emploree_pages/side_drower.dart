@@ -27,7 +27,6 @@ import '../../../../controllers/employeee_controllersss/employee_offer_appointme
 import '../../../../controllers/employeee_controllersss/payment_get_controller/payment_get_controller.dart';
 import '../../../../controllers/employeee_controllersss/salary_slip_controller/salary_slip_controllerss.dart';
 import '../../../../controllers/employeee_controllersss/support_comman/support_commannn.dart';
-import '../../../payments_pages/payment_get_page.dart';
 import '../view_pdf_only.dart';
 import 'change_password_employee.dart';
 import 'leaves_employee/multiple_day.dart';
@@ -180,9 +179,9 @@ class EmployeeNavBar extends StatelessWidget {
               leading: const Icon(Icons.person),
               title: const Text('View Profile'),
               onTap: () async {
-                _profileEmployeeController.profileemployeeApi();
-                _profileEmployeeController.profileBasicemployeeApi();
-                _profileEmployeeController.profileEmployeBankApi();
+                await _profileEmployeeController.profileemployeeApi();
+                await _profileEmployeeController.profileBasicemployeeApi();
+                await _profileEmployeeController.profileEmployeBankApi();
 
                 //profileBasicemployeeApi();
                 //     profileEmployeBankApi();
@@ -200,9 +199,9 @@ class EmployeeNavBar extends StatelessWidget {
               leading: const Icon(Icons.edit_outlined),
               title: const Text('Add/Update Profile'),
               onTap: () async {
-                _profileEmployeeController.profileemployeeApi();
-                _profileEmployeeController.profileBasicemployeeApi();
-                _profileEmployeeController.profileEmployeBankApi();
+                await _profileEmployeeController.profileemployeeApi();
+                await _profileEmployeeController.profileBasicemployeeApi();
+                await _profileEmployeeController.profileEmployeBankApi();
 
                 // _getprofilee.profileApi();
                 // Update UI after fetching profile information
@@ -249,17 +248,17 @@ class EmployeeNavBar extends StatelessWidget {
               },
             ),
 
-            ListTile(
-              leading: const Icon(Icons.currency_rupee),
-              title: const Text('Do Your Payment'),
-              onTap: () async {
-                await _employeeController.paymentemployeeApi();
-                _employeeController.onInit();
-                await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => GetPaymentPage()));
-              },
-            ),
-
+            ///todo: payment
+            // ListTile(
+            //   leading: const Icon(Icons.currency_rupee),
+            //   title: const Text('Do Your Payment'),
+            //   onTap: () async {
+            //     await _employeeController.paymentemployeeApi();
+            //     _employeeController.onInit();
+            //     await Navigator.push(context,
+            //         MaterialPageRoute(builder: (context) => GetPaymentPage()));
+            //   },
+            // ),
             ListTile(
               leading: const Icon(Icons.stay_current_landscape_rounded),
               title: const Text('Offer latter '),
@@ -363,6 +362,8 @@ class EmployeeNavBar extends StatelessWidget {
               },
             ),
 
+            ///
+
             ListTile(
               leading: const Icon(Icons.picture_as_pdf),
               title: const Text('Appointment Latter '),
@@ -463,6 +464,8 @@ class EmployeeNavBar extends StatelessWidget {
                 //     MaterialPageRoute(builder: (context) => Company()));
               },
             ),
+
+            ///
 
             ///todo: inbox and chat features.....
             // ListTile(

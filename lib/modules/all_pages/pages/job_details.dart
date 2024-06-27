@@ -88,6 +88,7 @@ class _JobDetailsState extends State<JobDetails> {
             var textfieldHeight2 = orientation == Orientation.portrait
                 ? screenHeight * 0.15
                 : screenHeight * 0.4;
+
             return Obx(() => (_jobdetauilsbyJobIdController.isLoading.value)
                 ? Center(child: CircularProgressIndicator())
                 : _buildBody());
@@ -99,11 +100,160 @@ class _JobDetailsState extends State<JobDetails> {
     return LayoutBuilder(
       builder: (context, constraints) {
         var orientation = MediaQuery.of(context).orientation;
+        final jobimage = _jobdetauilsbyJobIdController
+            .getjobdetailbyidModel?.response?.companyImage
+            .toString();
+
+        var screenWidth = constraints.maxWidth;
+        var screenHeight = constraints.maxHeight;
+
+        // Calculating sizes based on orientation
+        var imageWidth = orientation == Orientation.portrait
+            ? screenWidth * 0.55
+            : screenWidth * 0.3;
+        var imageHeight = orientation == Orientation.portrait
+            ? screenHeight * 0.2
+            : screenHeight * 0.4;
+
+        var textfieldWidth = orientation == Orientation.portrait
+            ? screenWidth * 0.83
+            : screenWidth * 0.45;
+        var textfieldHeight = orientation == Orientation.portrait
+            ? screenHeight * 0.2
+            : screenHeight * 0.3;
+
+        var textfieldWidth2 = orientation == Orientation.portrait
+            ? screenWidth * 0.84
+            : screenWidth * 0.87;
+        var textfieldHeight2 = orientation == Orientation.portrait
+            ? screenHeight * 0.15
+            : screenHeight * 0.4;
+
         return SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             children: [
-              _buildJobName(),
+              Container(
+                  padding: const EdgeInsets.all(16),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 20.0,
+                      ),
+                    ],
+                    borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(right: 10),
+                        height: textfieldHeight * 0.35,
+                        width: textfieldWidth * 0.35,
+                        child: ClipOval(
+                          clipBehavior: Clip.none,
+                          child: Image.network(
+                            FixedText.imgurl + jobimage.toString(),
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return ClipOval(
+                                child: Image.asset(
+                                  'lib/assets/logo/noimageavlble.jpg',
+                                  width: 30,
+                                  height: 30,
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      // Image.network(FixedText.imgurl + jobimage.toString(),
+                      //     width: 40, height: 40),
+                      const SizedBox(height: 8),
+                      blackHeadingSmall(
+                          "${_jobdetauilsbyJobIdController.getjobdetailbyidModel?.response?.jobTitle}"),
+
+                      // 'PHP Developer'),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          greyText(
+                              "${_jobdetauilsbyJobIdController.getjobdetailbyidModel?.response?.package}"
+
+                              // '₹ 4,75,000 - ₹ 7,90,000 a year'
+                              ),
+                          const SizedBox(width: 10),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 3, horizontal: 8),
+                            decoration: const BoxDecoration(
+                                color: Colors.black12,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(4))),
+                            child: greyTextSmall('Full Time'),
+                          ),
+                          greyText(
+                              "${_jobdetauilsbyJobIdController.getjobdetailbyidModel?.response?.employeementType}"
+
+                              // '₹ 4,75,000 - ₹ 7,90,000 a year'
+                              ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(right: 10),
+                            height: textfieldHeight * 0.20,
+                            width: textfieldWidth * 0.20,
+                            child: ClipOval(
+                              clipBehavior: Clip.none,
+                              child: Image.network(
+                                FixedText.imgurl + jobimage.toString(),
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return ClipOval(
+                                    child: Image.asset(
+                                      'lib/assets/logo/noimageavlble.jpg',
+                                      width: 30,
+                                      height: 30,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+
+                          // Container(
+                          //     padding: const EdgeInsets.only(right: 10),
+                          //     child: Image.asset('lib/assets/images/n2.png',
+                          //         width: 30, height: 30)),
+
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                blackHeadingSmall(
+                                    "${_jobdetauilsbyJobIdController.getjobdetailbyidModel?.response?.companyName}"),
+                                greyTextSmall(
+                                    "${_jobdetauilsbyJobIdController.getjobdetailbyidModel?.response?.location}"),
+                              ],
+                            ),
+                          ),
+                          greyTextSmall(
+                              "${_jobdetauilsbyJobIdController.getjobdetailbyidModel?.response?.noofdays}"
+                              ' Left')
+                        ],
+                      ),
+                    ],
+                  )),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -151,13 +301,13 @@ class _JobDetailsState extends State<JobDetails> {
           children: [
             Container(
               padding: const EdgeInsets.only(right: 10),
-              width: 60,
               height: 40,
+              width: 60,
               child: ClipOval(
                 clipBehavior: Clip.none,
                 child: Image.network(
                   FixedText.imgurl + jobimage.toString(),
-                  fit: BoxFit.fill,
+                  fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
                     return ClipOval(
                       child: Image.asset(
@@ -397,13 +547,13 @@ class _JobDetailsState extends State<JobDetails> {
                   },
                   child: Container(
                     padding: const EdgeInsets.only(right: 10),
-                    height: textfieldHeight * 0.26,
-                    width: textfieldWidth * 0.19,
+                    height: textfieldHeight * 0.23,
+                    width: textfieldWidth * 0.23,
                     child: ClipOval(
                       clipBehavior: Clip.none,
                       child: Image.network(
                         FixedText.imgurl + job.companyImage.toString(),
-                        fit: BoxFit.fill,
+                        fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {
                           return ClipOval(
                             child: Image.asset(

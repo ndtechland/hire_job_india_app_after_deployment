@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:hirejobindia/components/styles.dart';
-import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/home_page_employee.dart';
 import 'package:hirejobindia/modules/payments_pages/payment_get_page.dart';
-import 'package:hirejobindia/services_apis/api_servicesss.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../controllers/employeee_controllersss/payment_get_controller/payment_get_controller.dart'; // Import url_launcher
+import '../../controllers/employeee_controllersss/payment_get_controller/payment_get_controller.dart';
+import '../../services_apis/api_servicesss.dart';
+import '../all_pages/pages/emploree_pages/home_page_employee.dart'; // Import url_launcher
 
 final PaymentEmployeeController _paymentEmployeeController = Get.find();
 
@@ -44,9 +44,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
           '0';
       final paymentUrl = await _paymentService.createPaymentRequest(
         amount, // Amount in paise (INR)
-        'John Doe', // FirstName
-        'john.doe@example.com', // Email
-        '5465565765', // Phone
+        'HirejobIndia', // FirstName
+        'hire@jobindia.com', // Email
+        '5065565765', // Phone
         '7557', // ProductInfo
       );
       setState(() {
@@ -109,21 +109,28 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           // Check if the URL indicates success or failure
                           if (url != null &&
                               url.toString().startsWith(
-                                  'https://hirejobindia.com/PaymentResultsuccess/')) {
-                            // Payment was successful, navigate to success screen or show success message
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (_) => HomeEmployee()),
-                            );
-                            Get.snackbar("Successful", "Payment Successfull");
+                                  'https://hirejobindia.com/Success')) {
+                            // Payment was successful, introduce delay before navigating
+                            Future.delayed(Duration(seconds: 3), () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (_) => HomeEmployee()),
+                              );
+                              Get.snackbar("Successful", "Payment Successful");
+                            });
                           } else if (url != null &&
                               url.toString().startsWith(
-                                  'https://hirejobindia.com/PaymentResultfail/')) {
-                            // Payment failed, navigate to failure screen or show failure message
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (_) => GetPaymentPage()),
-                            );
-                            Get.snackbar("Failed", "Payment Failed");
+                                  'https://hirejobindia.com/Failed')) {
+                            print('failed loading: $url');
+
+                            // Payment failed, introduce delay before navigating
+                            Future.delayed(Duration(seconds: 3), () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (_) => GetPaymentPage()),
+                              );
+                              Get.snackbar("Failed", "Payment Failed");
+                            });
                           }
                         },
                       )

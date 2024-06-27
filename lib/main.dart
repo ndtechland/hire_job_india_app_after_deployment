@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+
+///import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:get/get.dart';
 import 'package:hirejobindia/controllers/nav_bar_controller/nav_controller.dart';
 import 'package:hirejobindia/modules/components/styles.dart';
@@ -31,13 +32,15 @@ Future<void> main() async {
   setupLazyLoading();
 
   HttpOverrides.global = MyHttpOverrides();
-  await FlutterDownloader.initialize(debug: true);
-  // await requestFilePermission();
+
+  /// await FlutterDownloader.initialize(debug: true);
+  /// await requestFilePermission();
 
   await Permission.storage.request();
-  //await requestPermissions();
 
-  FlutterDownloader.registerCallback(downloadCallback);
+  ///await requestPermissions();
+
+  ///FlutterDownloader.registerCallback(downloadCallback);
 
   runApp(const MyApp());
 }
@@ -51,10 +54,10 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void downloadCallback(String id, int status, int progress) {
-  final DownloadTaskStatus taskStatus = DownloadTaskStatus(status);
-  // Handle your download callback here if needed
-}
+// void downloadCallback(String id, int status, int progress) {
+//   final DownloadTaskStatus taskStatus = DownloadTaskStatus(status);
+//   // Handle your download callback here if needed
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

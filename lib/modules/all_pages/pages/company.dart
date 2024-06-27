@@ -6,8 +6,8 @@ import 'package:hirejobindia/constants/static_text.dart';
 import '../../../components/responsive_text.dart';
 import '../../../controllers/company_controllers/company_controller.dart';
 import '../../../controllers/company_detail_by_com_id/company_detail_by_id_controller.dart';
-import 'chat.dart';
 import 'company_detail.dart';
+import 'home.dart';
 
 class Company extends StatelessWidget {
   static const String id = 'Company';
@@ -16,16 +16,16 @@ class Company extends StatelessWidget {
 
   Company({Key? key}) : super(key: key);
 
-  List<Item> companyList = <Item>[
-    const Item('lib/assets/images/n3.png', 'Prince Tech'),
-    const Item('lib/assets/images/n2.png', 'Global Info'),
-    const Item('lib/assets/images/n1.png', 'Monarch IT'),
-    const Item('lib/assets/images/n4.png', 'Prince PVT. LTD.'),
-    const Item('lib/assets/images/n3.png', 'Rammurthi Tech'),
-    const Item('lib/assets/images/n2.png', 'Fcc Info'),
-    const Item('lib/assets/images/n1.png', 'Monar IT'),
-    const Item('lib/assets/images/n4.png', 'Soft PVT. LTD.'),
-  ];
+  // List<Item> companyList = <Item>[
+  //   const Item('lib/assets/images/n3.png', 'Prince Tech'),
+  //   const Item('lib/assets/images/n2.png', 'Global Info'),
+  //   const Item('lib/assets/images/n1.png', 'Monarch IT'),
+  //   const Item('lib/assets/images/n4.png', 'Prince PVT. LTD.'),
+  //   const Item('lib/assets/images/n3.png', 'Rammurthi Tech'),
+  //   const Item('lib/assets/images/n2.png', 'Fcc Info'),
+  //   const Item('lib/assets/images/n1.png', 'Monar IT'),
+  //   const Item('lib/assets/images/n4.png', 'Soft PVT. LTD.'),
+  // ];
 
   final AllcompanyController _allcompanyController =
       Get.put(AllcompanyController());
@@ -63,6 +63,11 @@ class Company extends StatelessWidget {
         title: const Text('Companies'),
         centerTitle: true,
         titleSpacing: 0,
+        leading: InkWell(
+            onTap: () {
+              Get.to(Home());
+            },
+            child: const Icon(Icons.arrow_back)),
         // actions: [
         //   IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
         // ],
@@ -238,7 +243,7 @@ class Company extends StatelessWidget {
                                               padding: const EdgeInsets.only(
                                                   right: 0),
                                               height: categoryHeight * 0.5,
-                                              width: categoryWidth * 0.25,
+                                              width: categoryWidth * 0.29,
                                               child: ClipOval(
                                                 clipBehavior: Clip.none,
                                                 child: category?.companyImage !=
@@ -249,7 +254,7 @@ class Company extends StatelessWidget {
                                                                 .companyImage
                                                                 .toString(),
                                                         //color: appColor,
-                                                        fit: BoxFit.fill,
+                                                        fit: BoxFit.contain,
                                                         errorBuilder: (context,
                                                             error, stackTrace) {
                                                           return Image.asset(

@@ -66,10 +66,11 @@ class BankDetailEmployeeProfile extends StatelessWidget {
                           blackHeadingSmall('Bank Information'.toUpperCase()),
                           GestureDetector(
                               onTap: () async {
-                                _profileEmployeeController.profileemployeeApi();
-                                _profileEmployeeController
+                                await _profileEmployeeController
+                                    .profileemployeeApi();
+                                await _profileEmployeeController
                                     .profileBasicemployeeApi();
-                                _profileEmployeeController
+                                await _profileEmployeeController
                                     .profileEmployeBankApi();
 
                                 // _getprofilee.profileApi();

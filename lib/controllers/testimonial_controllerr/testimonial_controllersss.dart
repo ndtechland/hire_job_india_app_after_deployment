@@ -9,7 +9,7 @@ class AlltestimonialController extends GetxController {
   final ApiProvider _apiProvider = ApiProvider(); // Use ApiProvider instance
   String searchQuery = "";
 
-  void TestimonialApi() async {
+  Future<void> TestimonialApi() async {
     isLoading(true);
     alltestimonialApiModel = await ApiProvider.AllTestimonialApi();
     print('Prince testimonial list');

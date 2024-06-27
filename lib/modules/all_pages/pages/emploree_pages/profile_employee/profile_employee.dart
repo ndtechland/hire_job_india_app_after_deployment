@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/home_page_employee.dart';
 import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/profile_employee/personal_info_employee.dart';
 
 import '../../../../../components/styles.dart';
@@ -22,7 +23,7 @@ class EmployeeProfile extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
-        Get.back();
+        Get.offAll(HomeEmployee());
         // _navcontroller.tabIndex(0);
         //Get.to(BottomNavBar());
         // Perform custom back button handling here

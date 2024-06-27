@@ -190,11 +190,11 @@ class _HomeState extends State<Home> {
           // Set dimensions based on orientation
           double containerWidth = isPortrait
               ? MediaQuery.of(context).size.width * 0.32
-              : MediaQuery.of(context).size.width * 0.16;
+              : MediaQuery.of(context).size.width * 0.32;
 
           double containerHeight = isPortrait
               ? MediaQuery.of(context).size.height * 0.13
-              : MediaQuery.of(context).size.height * 0.27;
+              : MediaQuery.of(context).size.height * 0.3;
 
           // Getting the size of the screen
           var screenWidth = constraints.maxWidth;
@@ -750,8 +750,10 @@ class _HomeState extends State<Home> {
                             child: Container(
                               margin: const EdgeInsets.only(
                                   top: 16, bottom: 16, right: 12),
-                              width: 110,
-                              height: 90,
+                              //width: 110,
+                              //height: 95,
+                              width: containerWidth,
+                              height: containerHeight,
                               clipBehavior: Clip.antiAlias,
                               decoration: const BoxDecoration(
                                 color: Colors.white,
@@ -766,7 +768,8 @@ class _HomeState extends State<Home> {
                                     BorderRadius.all(Radius.circular(6)),
                               ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Spacer(),
 
@@ -800,13 +803,13 @@ class _HomeState extends State<Home> {
                                                 (context, error, stackTrace) {
                                               return Image.asset(
                                                 'lib/assets/logo/noimageavlble.jpg',
-                                                fit: BoxFit.fill,
+                                                fit: BoxFit.contain,
                                               );
                                             },
                                           )
                                         : Image.network(
                                             'https://ih1.redbubble.net/image.5098928927.2456/flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg',
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.contain,
                                           ),
                                     context: context,
                                   ),
@@ -872,8 +875,8 @@ class _HomeState extends State<Home> {
                     children: [
                       blackHeadingSmall('Our Testimonial'.toUpperCase()),
                       GestureDetector(
-                          onTap: () {
-                            _alltestimonialController.TestimonialApi();
+                          onTap: () async {
+                            await _alltestimonialController.TestimonialApi();
                             _alltestimonialController.update();
                             Navigator.push(
                                 context,
@@ -899,7 +902,14 @@ class _HomeState extends State<Home> {
                         children: _alltestimonialController.foundtestmonial
                             .map((testgimonial) {
                           return GestureDetector(
-                            onTap: () {},
+                            onTap: () async {
+                              await _alltestimonialController.TestimonialApi();
+                              _alltestimonialController.update();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TestimonialView()));
+                            },
                             child: Container(
                                 margin: const EdgeInsets.only(
                                     top: 16, bottom: 16, right: 12),
@@ -955,7 +965,7 @@ class _HomeState extends State<Home> {
                                                       testgimonial.filePath
                                                           .toString(),
                                                   // color: appColor,
-                                                  fit: BoxFit.fill,
+                                                  fit: BoxFit.contain,
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return Image.asset(
@@ -1126,18 +1136,18 @@ class _HomeState extends State<Home> {
                                       FixedText.imgurl +
                                           category.postedImage.toString(),
                                       color: appColor,
-                                      fit: BoxFit.fill,
+                                      fit: BoxFit.contain,
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         return Image.asset(
                                           'lib/assets/logo/noimageavlble.jpg',
-                                          fit: BoxFit.fill,
+                                          fit: BoxFit.contain,
                                         );
                                       },
                                     )
                                   : Image.network(
                                       'https://ih1.redbubble.net/image.5098928927.2456/flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg',
-                                      fit: BoxFit.fill,
+                                      fit: BoxFit.contain,
                                     ),
                               context: context,
                             ),

@@ -181,7 +181,7 @@ class Categories extends StatelessWidget {
                                                             category.postedImage
                                                                 .toString(),
                                                         color: appColor,
-                                                        fit: BoxFit.fill,
+                                                        fit: BoxFit.contain,
                                                         errorBuilder: (context,
                                                             error, stackTrace) {
                                                           return Image.asset(

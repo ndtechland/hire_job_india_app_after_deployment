@@ -85,15 +85,15 @@ class _BankDetailUpdateEmployeeProfileState
 
   @override
   void dispose() {
-    _acholdernameController.dispose();
-    _bankController.dispose();
-    _accnumberController.dispose();
-    _reenteracnoNumberController.dispose();
-    _ifscController.dispose();
-    _acounttypeController.dispose();
-    _epfnumnberController.dispose();
-    _nominiNameController.dispose();
-    _cvFilePathController.dispose();
+    // _acholdernameController.dispose();
+    // _bankController.dispose();
+    // _accnumberController.dispose();
+    // _reenteracnoNumberController.dispose();
+    // _ifscController.dispose();
+    // _acounttypeController.dispose();
+    // _epfnumnberController.dispose();
+    // _nominiNameController.dispose();
+    // _cvFilePathController.dispose();
     super.dispose();
   }
 
@@ -175,11 +175,11 @@ class _BankDetailUpdateEmployeeProfileState
                             blackHeadingSmall('Bank Information'.toUpperCase()),
                             GestureDetector(
                                 onTap: () async {
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileemployeeApi();
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileBasicemployeeApi();
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileEmployeBankApi();
 
                                   //profileBasicemployeeApi();
@@ -188,11 +188,13 @@ class _BankDetailUpdateEmployeeProfileState
                                   _profileEmployeeController.update();
                                   // await _profileController.profileApi();
                                   // _profileController.update();
-                                  await Navigator.push(
+
+                                  Get.off(EmployeeProfile());
+                                  /*await Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              EmployeeProfile()));
+                                              EmployeeProfile()));*/
                                 },
                                 child: appcolorText('view'))
                           ],

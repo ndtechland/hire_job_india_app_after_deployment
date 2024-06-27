@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>CFBundleDevelopmentRegion</key>
@@ -59,13 +60,19 @@
         <string>processing</string>
         <string>remote-notification</string>
     </array>
-
     <key>BGTaskSchedulerPermittedIdentifiers</key>
     <array>
         <string>com.ndtechland.hirejobindiaa.hirejobindia.backgroundtask1</string>
         <string>com.ndtechland.hirejobindiaa.hirejobindia.backgroundtask2</string>
         <!-- Add more identifiers as needed -->
     </array>
+
+      <!-- Permissions for download file -->
+    <key>NSDownloadsDirectoryUsageDescription</key>
+    <string>We need access to your downloads folder to save the downloaded files.</string>
+    <key>NSDocumentsFolderUsageDescription</key>
+    <string>We need access to your documents folder to save the downloaded files.</string>
+
     <!-- Permissions for geocoding -->
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>We need access to your location to provide geocoding services.</string>
@@ -78,7 +85,8 @@
     <true/>
     <key>NSAppTransportSecurity</key>
     <dict>
-      <key>NSAllowsArbitraryLoads</key>
-      <true/>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
 </dict>
 </plist>

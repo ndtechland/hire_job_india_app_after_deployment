@@ -351,7 +351,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
         borderRadius: BorderRadius.all(Radius.circular(4)),
         image: DecorationImage(
             image: AssetImage('lib/assets/logo/hirelogo108.jpg'),
-            fit: BoxFit.cover),
+            fit: BoxFit.fill),
       ),
       child: _companyDetailController
                   .companydetailbyIdmodel?.response?.bgCompanyImage !=
@@ -409,7 +409,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                             0.07, // Default height for landscape mode
                     width: MediaQuery.of(context).orientation ==
                             Orientation.portrait
-                        ? MediaQuery.of(context).size.width * 0.15
+                        ? MediaQuery.of(context).size.width * 0.19
                         // Default width for portrait mode
                         : MediaQuery.of(context).size.width * 0.15,
                     padding: EdgeInsets.only(right: 10),
@@ -425,7 +425,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                         ? Image.network(
                             "${FixedText.imgurl}${_companyDetailController.companydetailbyIdmodel?.response?.companyImage.toString()}",
                             //color: appColor,
-                            fit: BoxFit.fill,
+                            fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(
                                 'lib/assets/logo/noimageavlble.jpg',
@@ -936,7 +936,7 @@ class _CompanyDetailState extends State<CompanyDetail> {
                                                         .cjobOpeningss![index]
                                                         .companyImage ??
                                                     ""),
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.contain,
                                             errorBuilder:
                                                 (context, error, stackTrace) {
                                               return ClipOval(

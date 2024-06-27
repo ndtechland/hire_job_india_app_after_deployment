@@ -380,11 +380,11 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                 'Basic Informations'.toUpperCase()),
                             GestureDetector(
                                 onTap: () async {
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileemployeeApi();
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileBasicemployeeApi();
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileEmployeBankApi();
 
                                   //profileBasicemployeeApi();
@@ -393,11 +393,13 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                   _profileEmployeeController.update();
                                   // await _profileController.profileApi();
                                   // _profileController.update();
-                                  await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              EmployeeProfile()));
+
+                                  await Get.off(EmployeeProfile());
+                                  // await Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) =>
+                                  //             EmployeeProfile()));
                                 },
                                 child: appcolorText('View'))
                           ],
@@ -589,11 +591,11 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                             blackHeadingSmall('Location'.toUpperCase()),
                             GestureDetector(
                                 onTap: () async {
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileemployeeApi();
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileBasicemployeeApi();
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileEmployeBankApi();
 
                                   //profileBasicemployeeApi();
@@ -602,11 +604,13 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                   _profileEmployeeController.update();
                                   // await _profileController.profileApi();
                                   // _profileController.update();
-                                  await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              EmployeeProfile()));
+                                  await Get.off(EmployeeProfile());
+
+                                  // await Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) =>
+                                  //             EmployeeProfile()));
                                 },
                                 child: appcolorText('View'))
                           ],
@@ -844,24 +848,26 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                             blackHeadingSmall('Documents'.toUpperCase()),
                             GestureDetector(
                                 onTap: () async {
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileemployeeApi();
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileBasicemployeeApi();
-                                  _profileEmployeeController
+                                  await _profileEmployeeController
                                       .profileEmployeBankApi();
 
                                   //profileBasicemployeeApi();
                                   //     profileEmployeBankApi();
 
                                   _profileEmployeeController.update();
-                                  // await _profileController.profileApi();
-                                  // _profileController.update();
-                                  await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              EmployeeProfile()));
+
+                                  await
+                                      // await _profileController.profileApi();
+                                      // _profileController.update();
+                                      await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EmployeeProfile()));
                                 },
                                 child: appcolorText('View'))
                           ],
@@ -1152,6 +1158,16 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                   .getprofileemployeeModel?.data?.cityid
                                   ?.toString() ??
                               "158";
+
+                          ///todo: profile...
+
+                          _profilePictureEmployeController
+                              .updaprofilrimgProfile(
+                            cvFileContent3: cvFileContent3!,
+                            Empprofile: _profileimagePathController.text,
+                          );
+
+                          ///todo: other and document not update.......
                           _employeeUpdatePersonalController
                               .updateProfilePersonalApi(
                             personalEmailAddress: _emailController.text,
@@ -1175,15 +1191,14 @@ class _PersonalUpdateProfileState extends State<PersonalUpdateProfile> {
                                 .text, // Pass Aadhar file name
                             panFileContent:
                                 _panFileContent!, // Pass PAN file content
+                            // Panbase64: _panFilePathController.text.isNotEmpty
+                            //     ? _panFilePathController.text
+                            //     : null, // Check if PAN file path is provided
+
                             Panbase64: _panFilePathController!
                                 .text, // Pass PAN file name
                           );
 
-                          _profilePictureEmployeController
-                              .updaprofilrimgProfile(
-                            cvFileContent3: cvFileContent3!,
-                            Empprofile: _profileimagePathController.text,
-                          );
                           // await Future.delayed(Duration(seconds: 3));
 
                           ///Clear dropdown value
